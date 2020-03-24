@@ -37,8 +37,8 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                         The model has the following input arguments:
                         <ul>
                             <li>Deaths - number of deaths on a given day (not the cumulative value)</li>
-                            <li>Fatality Rate - percentage of confirmed cases that have resulted in the patient’s death</li>
-                            <li>Doubling Time - number of days it takes for the amount of cases to double</li>
+                            <li>Fatality Rate - the percentage of confirmed cases that have resulted in the patient’s death</li>
+                            <li>Doubling Time - how many days it takes for the number of cases to double</li>
                             <li>Time from symptom onset to death - number of days it takes for the cases to become deaths</li>
                         </ul>
                     </Typography>
@@ -53,8 +53,8 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
 
                     <Typography gutterBottom variant='h4'>Range</Typography>
                     <Typography paragraph component='div'>
-                        To avoid illusion of certainty of estimates, we require a range for input arguments and provide a range for the estimate.
-                        We just run the formula twice for each of the lower and upper bound of the estimate.
+                        To avoid the illusion of certainty of estimates, we require a range for input arguments and provide a range for the estimate.
+                        We run the formula twice for each of the lower and upper bound of the estimate.
                         <MathJax.Context input='ascii'>
                         <ul>
                             <li>Lower estimate uses upper <MathJax.Node inline>fatalityRate</MathJax.Node>, lower <MathJax.Node inline>daysT oDeath</MathJax.Node> and upper <MathJax.Node inline>daysT oDoubl e</MathJax.Node></li>
@@ -65,15 +65,15 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
 
                     <Typography gutterBottom variant='h4'>Default Argument values</Typography>
                     <Typography paragraph component='div'>
-                        The default values for each of three arguments are set as a small spread around the estimated value presented in the article.
-                        The minimal and maximal value for each of three arguments are set according to minimal and maximal value found by researches linked by article.
+                        The default values for each of the three arguments are set as a small spread around the estimated value presented in the article.
+                        The minimum and maximum value for each of the three arguments are set according to the minimum and maximum value found by the linked researches linked in Tomas Pueyo's article or worksheet.
                     </Typography>
 
                     <Typography gutterBottom variant='h4'>Running Average</Typography>
                     <Typography paragraph>
-                        By default, we &quot;smooth&quot; the estimates by using running 7-day average deaths instead of exact deaths.
-                        That eliminates bumps and spikes in estimates, especially where death count is sparse (e.g. Japan).
-                        It can be disabled by using a switch control at the top right corner of the chart.
+                        By default, we &quot;smooth&quot; the estimates by running a 7-days average number of deaths instead of the exact number of deaths.
+                        That eliminates drops and spikes in the estimates, especially where the death count is relatively low (e.g. Japan).
+                        This setting can be disabled by using a switch control at the top right corner of the chart.
                         The exact &quot;smoothing&quot; formula is as follows:
                         <ul>
                             <li>first and last data series: exact value</li>
@@ -87,7 +87,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                     <Typography paragraph>
                         We use data from <a target='_blank' rel='noopener noreferrer' href='https://systems.jhu.edu/'>CSSE at Johns Hopkins University</a> git repository on <a target='_blank' rel='noopener noreferrer' href='//github.com/CSSEGISandData/COVID-19'>github</a>.
                         They provide daily data on confirmed cases of COVID-19, as well as deaths and cases of recovery grouped by country or lower level.
-                        Although they provide very comprehensive and up-to-date information that most of the (global) dashboards online rely on,
+                        Although they provide very comprehensive and up-to-date information that most of the (global) online dashboards rely on,
                         they are not without faults and errors as shown by outstanding 500+ issues and 100+ pull requests.
                     </Typography>
                     <Typography paragraph>
