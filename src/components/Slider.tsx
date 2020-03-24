@@ -42,6 +42,7 @@ interface IProps {
 export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...props}) => {
     const {percent, title, tooltip, argKey, min, max, step, format} = props
     const domainStore = React.useContext(CONTEXT.DOMAIN)
+    const piwikStore = React.useContext(CONTEXT.PIWIK)
 
     const resetState = () => [
         String(domainStore.modelArgs[argKey][0] * (percent ? 100 : 1)),
@@ -59,6 +60,13 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
             Number(value[1]) / (percent ? 100 : 1),
         ]
         setValue(resetState())
+        piwikStore.push([
+            'trackEvent',
+            'model',
+            `argument-${argKey}`,
+            (domainStore.modelArgs[argKey][0] + domainStore.modelArgs[argKey][1]) / 2,
+            domainStore.modelArgs[argKey][1] - domainStore.modelArgs[argKey][0],
+        ])
     })
 
     const handleChange = (event, newValue) => {

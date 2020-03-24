@@ -245,10 +245,23 @@ export class DomainStore {
     }
 
     public setSelectedDomain = action((domainEntry: [string, string]) => {
+        this.piwikStore.push([
+            'trackEvent',
+            'model',
+            'search',
+            domainEntry[0],
+        ])
         this.selector = domainEntry[0]
     })
     public setSmooth = action((valueOrEvent: boolean | React.ChangeEvent<HTMLInputElement>) => {
-        this.smooth = typeof valueOrEvent === 'boolean' ? valueOrEvent : valueOrEvent.target.checked
+        const bool = typeof valueOrEvent === 'boolean' ? valueOrEvent : valueOrEvent.target.checked
+        this.piwikStore.push([
+            'trackEvent',
+            'model',
+            'smooth',
+            bool ? 'on' : 'off',
+        ])
+        this.smooth = bool
     })
 }
 
