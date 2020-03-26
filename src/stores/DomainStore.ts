@@ -120,8 +120,8 @@ export class DomainStore {
     @observable.deep public modelArgs: IModelArgsExpanded = DomainStore.DEFAULT_ARGS
 
     private piwikStore: PiwikStore
-    @observable public domainNames: [string, string][] = [[WORLD, WORLD]]
-    @observable public selector: string = WORLD
+    @observable public domainNames: [string, string][] = []  // [[WORLD, WORLD]]
+    @observable public selector = 'Italy'
     @observable public smooth = true
 
     public constructor(piwikStore: PiwikStore) {

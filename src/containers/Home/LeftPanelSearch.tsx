@@ -53,8 +53,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                     options={domainStore.domainNames}
                     getOptionLabel={option => option[1]}
                     filterOptions={filterOptions}
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    value={domainStore.domainNames.find((domain) => domain[0] === domainStore.selector)}
+                    value={domainStore.domainNames.find((domain) => domain[0] === domainStore.selector) || domainStore.selector}
                     onChange={(event, value)=>domainStore.setSelectedDomain(value)}
                     renderInput={(params) => (<TextField {...params} variant="outlined" InputProps={{
                             ...params.InputProps,
