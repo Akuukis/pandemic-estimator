@@ -45,7 +45,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                         But people and media often use these terms as synonyms.
                         Our online tool gives an estimate of the actual cases based on the model developed
                         by <a target='_blank' rel='noopener noreferrer' href='https://medium.com/@tomaspueyo/coronavirus-act-today-or-people-will-die-f4d3d9cd99ca'>Tomas Pueyo</a>.
-                        Change the options on the side panel to model actual cases and deaths for specific countries or age groups.
+                        Change the options on the side panel to model actual cases based on deaths for specific countries or age groups.
                     </Typography>
                 </Grid>
             </Grid>
