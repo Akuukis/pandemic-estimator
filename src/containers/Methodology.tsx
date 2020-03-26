@@ -87,11 +87,14 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                     <Typography paragraph>
                         We use data from <a target='_blank' rel='noopener noreferrer' href='https://systems.jhu.edu/'>CSSE at Johns Hopkins University</a> git repository on <a target='_blank' rel='noopener noreferrer' href='//github.com/CSSEGISandData/COVID-19'>github</a>.
                         They provide daily data on confirmed cases of COVID-19, as well as deaths and cases of recovery grouped by country or lower level.
-                        Although they provide very comprehensive and up-to-date information that most of the (global) online dashboards rely on,
-                        they are not without faults and errors as shown by outstanding 500+ issues and 100+ pull requests.
                     </Typography>
                     <Typography paragraph>
                         We use their daily reports <a target='_blank' rel='noopener noreferrer' href='//github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports'>here</a>, out of which some are ignored due to corrupt structure and/or missing data points.
+                    </Typography>
+                    <Typography paragraph>
+                        Although they provide very comprehensive and up-to-date information that most of the (global) online dashboards rely on,
+                        they are not without faults and errors as shown by outstanding 500+ issues and 100+ pull requests.
+                        Please see full list of ommited or adjusted dataseries at state/province level <a target='_blank' rel='noopener noreferrer' href='//github.com/Akuukis/pandemic-estimator'>here</a>. Notable exclusions: Brazil, France, Denmark, Iran, Russia and others fully or partially.
                     </Typography>
                 </Grid>
             </Grid>

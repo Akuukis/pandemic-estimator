@@ -1,3 +1,367 @@
 # Pandemic Estimator
 
 Website is here: https://pandemic-estimator.net
+
+# Data (Mar 26)
+
+Data updated for Mar 25.
+
+Several data series ignored due bad structure of data:
+- Missing last datapoint: Azerbaijan
+- Missing last datapoint: Aruba
+- Missing last datapoint: Australia
+- Missing last datapoint: Australia (From Diamond Princess)
+- Missing last datapoint: Austria (None)
+- Unknown location: Bahamas
+- Dataseries have gap(s): Brazil
+- Missing last datapoint: Canada ( Montreal, QC)
+- Missing last datapoint: Canada (Calgary, Alberta)
+- Missing last datapoint: Canada (Edmonton, Alberta)
+- Dataseries have gap(s): Canada (Grand Princess)
+- Missing last datapoint: Canada (London, ON)
+- Missing last datapoint: Canada (Northwest Territories)
+- Dataseries have gap(s): Canada (Ontario)
+- Missing last datapoint: Canada (Toronto, ON)
+- Unknown location: Canada (Toronto, ON)
+- Missing last datapoint: Cayman Islands
+- Unknown location: Chad
+- Dataseries have gap(s): Colombia
+- Unknown location: Colombia
+- Unknown location: Colombia
+- Unknown location: Croatia
+- Missing last datapoint: Curacao
+- Missing last datapoint: Czech Republic
+- Dataseries have gap(s): Denmark
+- Missing last datapoint: Denmark (Denmark)
+- Unknown location: Denmark (Greenland)
+- Unknown location: Dominican Republic
+- Missing last datapoint: Faroe Islands
+- Unknown location: Finland
+- Unknown location: Finland
+- Unknown location: Finland
+- Unknown location: Finland
+- Unknown location: Finland
+- Unknown location: Finland
+- Unknown location: Finland
+- Unknown location: Finland
+- Unknown location: Finland
+- Unknown location: Finland
+- Unknown location: Finland
+- Unknown location: Finland
+- Missing last datapoint: French Guiana
+- Unknown location: Gambia
+- Missing last datapoint: Germany (Bavaria)
+- Missing last datapoint: Gibraltar
+- Missing last datapoint: Greenland
+- Missing last datapoint: Guadeloupe
+- Missing last datapoint: Guam
+- Missing last datapoint: Guernsey
+- Missing last datapoint: Hong Kong (Hong Kong)
+- Missing last datapoint: Hong Kong SAR (Hong Kong)
+- Dataseries have gap(s): Iran
+- Unknown location: Iran
+- Missing last datapoint: Iraq (None)
+- Missing last datapoint: Israel (From Diamond Princess)
+- Unknown location: Italy
+- Missing last datapoint: Jersey
+- Unknown location: Kenya
+- Missing last datapoint: Kosovo
+- Unknown location: Kyrgyzstan
+- Missing last datapoint: Lebanon (None)
+- Missing last datapoint: Macao SAR (Macau)
+- Unknown location: Macao SAR (Macau)
+- Missing last datapoint: Mainland China (Anhui)
+- Missing last datapoint: Mainland China (Beijing)
+- Missing last datapoint: Mainland China (Chongqing)
+- Missing last datapoint: Mainland China (Fujian)
+- Missing last datapoint: Mainland China (Gansu)
+- Missing last datapoint: Mainland China (Guangdong)
+- Missing last datapoint: Mainland China (Guangxi)
+- Missing last datapoint: Mainland China (Guizhou)
+- Missing last datapoint: Mainland China (Hainan)
+- Missing last datapoint: Mainland China (Hebei)
+- Missing last datapoint: Mainland China (Heilongjiang)
+- Missing last datapoint: Mainland China (Henan)
+- Missing last datapoint: Mainland China (Hubei)
+- Missing last datapoint: Mainland China (Hunan)
+- Missing last datapoint: Mainland China (Inner Mongolia)
+- Missing last datapoint: Mainland China (Jiangsu)
+- Missing last datapoint: Mainland China (Jiangxi)
+- Missing last datapoint: Mainland China (Jilin)
+- Missing last datapoint: Mainland China (Liaoning)
+- Missing last datapoint: Mainland China (Ningxia)
+- Missing last datapoint: Mainland China (Qinghai)
+- Missing last datapoint: Mainland China (Shaanxi)
+- Missing last datapoint: Mainland China (Shandong)
+- Missing last datapoint: Mainland China (Shanghai)
+- Missing last datapoint: Mainland China (Shanxi)
+- Missing last datapoint: Mainland China (Sichuan)
+- Missing last datapoint: Mainland China (Tianjin)
+- Missing last datapoint: Mainland China (Tibet)
+- Missing last datapoint: Mainland China (Xinjiang)
+- Missing last datapoint: Mainland China (Yunnan)
+- Missing last datapoint: Mainland China (Zhejiang)
+- Dataseries have gap(s): Malaysia
+- Missing last datapoint: Martinique
+- Missing last datapoint: Mayotte
+- Dataseries have gap(s): Mexico
+- Dataseries have gap(s): Moldova
+- Dataseries have gap(s): Netherlands
+- Missing last datapoint: Netherlands (Netherlands)
+- Unknown location: Nigeria
+- Unknown location: Oman
+- Unknown location: Oman
+- Missing last datapoint: Palestine
+- Dataseries have gap(s): Philippines
+- Missing last datapoint: Puerto Rico
+- Unknown location: Qatar
+- Missing last datapoint: Republic of Korea
+- Missing last datapoint: Republic of Moldova
+- Missing last datapoint: Republic of the Congo
+- Missing last datapoint: Reunion
+- Dataseries have gap(s): Russia
+- Missing last datapoint: Russian Federation
+- Missing last datapoint: Saint Barthelemy
+- Missing last datapoint: Saint Martin
+- Unknown location: South Africa
+- Unknown location: Sri Lanka
+- Unknown location: Syria
+- Missing last datapoint: Taiwan (Taiwan)
+- Unknown location: Taiwan (Taiwan)
+- Missing last datapoint: The Bahamas
+- Missing last datapoint: The Gambia
+- Missing last datapoint: UK
+- Missing last datapoint: US ( Norfolk County, MA)
+- Dataseries have gap(s): US (Alabama)
+- Missing last datapoint: US (Alameda County, CA)
+- Dataseries have gap(s): US (Alaska)
+- Dataseries have gap(s): US (Arizona)
+- Dataseries have gap(s): US (Arkansas)
+- Missing last datapoint: US (Ashland, NE)
+- Missing last datapoint: US (Bennington County, VT)
+- Missing last datapoint: US (Bergen County, NJ)
+- Missing last datapoint: US (Berkeley, CA)
+- Missing last datapoint: US (Berkshire County, MA)
+- Missing last datapoint: US (Boston, MA)
+- Missing last datapoint: US (Broward County, FL)
+- Dataseries have gap(s): US (California)
+- Missing last datapoint: US (Carver County, MN)
+- Missing last datapoint: US (Charleston County, SC)
+- Missing last datapoint: US (Charlotte County, FL)
+- Missing last datapoint: US (Chatham County, NC)
+- Missing last datapoint: US (Cherokee County, GA)
+- Missing last datapoint: US (Chicago)
+- Missing last datapoint: US (Chicago, IL)
+- Missing last datapoint: US (Clark County, NV)
+- Missing last datapoint: US (Clark County, WA)
+- Missing last datapoint: US (Cobb County, GA)
+- Missing last datapoint: US (Collin County, TX)
+- Dataseries have gap(s): US (Colorado)
+- Dataseries have gap(s): US (Connecticut)
+- Missing last datapoint: US (Contra Costa County, CA)
+- Missing last datapoint: US (Cook County, IL)
+- Missing last datapoint: US (Davidson County, TN)
+- Missing last datapoint: US (Davis County, UT)
+- Dataseries have gap(s): US (Delaware)
+- Missing last datapoint: US (Delaware County, PA)
+- Missing last datapoint: US (Denver County, CO)
+- Missing last datapoint: US (Douglas County, CO)
+- Missing last datapoint: US (Douglas County, NE)
+- Missing last datapoint: US (Douglas County, OR)
+- Missing last datapoint: US (El Paso County, CO)
+- Missing last datapoint: US (Fairfax County, VA)
+- Missing last datapoint: US (Fairfield County, CT)
+- Missing last datapoint: US (Fayette County, KY)
+- Dataseries have gap(s): US (Florida)
+- Missing last datapoint: US (Floyd County, GA)
+- Missing last datapoint: US (Fort Bend County, TX)
+- Missing last datapoint: US (Fresno County, CA)
+- Missing last datapoint: US (Fulton County, GA)
+- Dataseries have gap(s): US (Georgia)
+- Missing last datapoint: US (Grafton County, NH)
+- Missing last datapoint: US (Grand Princess Cruise Ship)
+- Missing last datapoint: US (Grant County, WA)
+- Missing last datapoint: US (Harford County, MD)
+- Missing last datapoint: US (Harris County, TX)
+- Missing last datapoint: US (Harrison County, KY)
+- Dataseries have gap(s): US (Hawaii)
+- Missing last datapoint: US (Hendricks County, IN)
+- Missing last datapoint: US (Hillsborough, FL)
+- Missing last datapoint: US (Honolulu County, HI)
+- Missing last datapoint: US (Hudson County, NJ)
+- Missing last datapoint: US (Humboldt County, CA)
+- Dataseries have gap(s): US (Idaho)
+- Dataseries have gap(s): US (Illinois)
+- Dataseries have gap(s): US (Indiana)
+- Dataseries have gap(s): US (Iowa)
+- Missing last datapoint: US (Jackson County, OR )
+- Missing last datapoint: US (Jefferson County, KY)
+- Missing last datapoint: US (Jefferson County, WA)
+- Missing last datapoint: US (Jefferson Parish, LA)
+- Missing last datapoint: US (Johnson County, IA)
+- Missing last datapoint: US (Johnson County, KS)
+- Dataseries have gap(s): US (Kansas)
+- Dataseries have gap(s): US (Kentucky)
+- Missing last datapoint: US (Kershaw County, SC)
+- Missing last datapoint: US (King County, WA)
+- Missing last datapoint: US (Kittitas County, WA)
+- Missing last datapoint: US (Klamath County, OR)
+- Missing last datapoint: US (Lackland, TX)
+- Missing last datapoint: US (Lackland, TX (From Diamond Princess))
+- Missing last datapoint: US (Lee County, FL)
+- Missing last datapoint: US (Los Angeles, CA)
+- Dataseries have gap(s): US (Louisiana)
+- Missing last datapoint: US (Madera County, CA)
+- Missing last datapoint: US (Madison, WI)
+- Dataseries have gap(s): US (Maine)
+- Missing last datapoint: US (Manatee County, FL)
+- Missing last datapoint: US (Maricopa County, AZ)
+- Missing last datapoint: US (Marion County, IN)
+- Missing last datapoint: US (Marion County, OR)
+- Dataseries have gap(s): US (Maryland)
+- Dataseries have gap(s): US (Massachusetts)
+- Dataseries have gap(s): US (Michigan)
+- Missing last datapoint: US (Middlesex County, MA)
+- Dataseries have gap(s): US (Minnesota)
+- Dataseries have gap(s): US (Mississippi)
+- Dataseries have gap(s): US (Missouri)
+- Dataseries have gap(s): US (Montana)
+- Missing last datapoint: US (Montgomery County, MD)
+- Missing last datapoint: US (Montgomery County, PA)
+- Missing last datapoint: US (Montgomery County, TX)
+- Missing last datapoint: US (Nassau County, NY)
+- Dataseries have gap(s): US (Nebraska)
+- Dataseries have gap(s): US (Nevada)
+- Dataseries have gap(s): US (New Hampshire)
+- Dataseries have gap(s): US (New Jersey)
+- Dataseries have gap(s): US (New Mexico)
+- Dataseries have gap(s): US (New York)
+- Missing last datapoint: US (New York City, NY)
+- Missing last datapoint: US (New York County, NY)
+- Missing last datapoint: US (Norfolk County, MA)
+- Dataseries have gap(s): US (North Carolina)
+- Dataseries have gap(s): US (North Dakota)
+- Missing last datapoint: US (Norwell County, MA)
+- Dataseries have gap(s): US (Ohio)
+- Missing last datapoint: US (Okaloosa County, FL)
+- Dataseries have gap(s): US (Oklahoma)
+- Missing last datapoint: US (Omaha, NE (From Diamond Princess))
+- Missing last datapoint: US (Orange County, CA)
+- Missing last datapoint: US (Orange, CA)
+- Dataseries have gap(s): US (Oregon)
+- Dataseries have gap(s): US (Pennsylvania)
+- Missing last datapoint: US (Pierce County, WA)
+- Missing last datapoint: US (Pinal County, AZ)
+- Missing last datapoint: US (Placer County, CA)
+- Missing last datapoint: US (Plymouth County, MA)
+- Missing last datapoint: US (Polk County, GA)
+- Missing last datapoint: US (Portland, OR)
+- Missing last datapoint: US (Providence County, RI)
+- Missing last datapoint: US (Providence, RI)
+- Missing last datapoint: US (Queens County, NY)
+- Missing last datapoint: US (Ramsey County, MN)
+- Dataseries have gap(s): US (Rhode Island)
+- Missing last datapoint: US (Riverside County, CA)
+- Missing last datapoint: US (Rockingham County, NH)
+- Missing last datapoint: US (Rockland County, NY)
+- Missing last datapoint: US (Sacramento County, CA)
+- Missing last datapoint: US (San Antonio, TX)
+- Missing last datapoint: US (San Benito, CA)
+- Missing last datapoint: US (San Diego County, CA)
+- Missing last datapoint: US (San Francisco County, CA)
+- Missing last datapoint: US (San Mateo, CA)
+- Missing last datapoint: US (Santa Clara County, CA)
+- Missing last datapoint: US (Santa Clara, CA)
+- Missing last datapoint: US (Santa Cruz County, CA)
+- Missing last datapoint: US (Santa Rosa County, FL)
+- Missing last datapoint: US (Sarasota, FL)
+- Missing last datapoint: US (Saratoga County, NY)
+- Missing last datapoint: US (Seattle, WA)
+- Missing last datapoint: US (Shasta County, CA)
+- Missing last datapoint: US (Shelby County, TN)
+- Missing last datapoint: US (Snohomish County, WA)
+- Missing last datapoint: US (Sonoma County, CA)
+- Dataseries have gap(s): US (South Carolina)
+- Dataseries have gap(s): US (South Dakota)
+- Missing last datapoint: US (Spartanburg County, SC)
+- Missing last datapoint: US (Spokane County, WA)
+- Missing last datapoint: US (St. Louis County, MO)
+- Missing last datapoint: US (Suffolk County, MA)
+- Missing last datapoint: US (Suffolk County, NY)
+- Missing last datapoint: US (Summit County, CO)
+- Missing last datapoint: US (Tempe, AZ)
+- Dataseries have gap(s): US (Tennessee)
+- Dataseries have gap(s): US (Texas)
+- Missing last datapoint: US (Travis, CA)
+- Missing last datapoint: US (Travis, CA (From Diamond Princess))
+- Missing last datapoint: US (Tulsa County, OK)
+- Missing last datapoint: US (US)
+- Missing last datapoint: US (Ulster County, NY)
+- Missing last datapoint: US (Umatilla, OR)
+- Missing last datapoint: US (Unassigned Location (From Diamond Princess))
+- Missing last datapoint: US (Unassigned Location, VT)
+- Missing last datapoint: US (Unassigned Location, WA)
+- Missing last datapoint: US (United States Virgin Islands)
+- Missing last datapoint: US (Unknown Location, MA)
+- Dataseries have gap(s): US (Utah)
+- Dataseries have gap(s): US (Vermont)
+- Dataseries have gap(s): US (Virgin Islands)
+- Missing last datapoint: US (Virgin Islands, U.S.)
+- Dataseries have gap(s): US (Virginia)
+- Missing last datapoint: US (Volusia County, FL)
+- Missing last datapoint: US (Wake County, NC)
+- Dataseries have gap(s): US (Washington)
+- Missing last datapoint: US (Washington County, OR)
+- Missing last datapoint: US (Washington, D.C.)
+- Missing last datapoint: US (Washoe County, NV)
+- Missing last datapoint: US (Wayne County, PA)
+- Dataseries have gap(s): US (West Virginia)
+- Missing last datapoint: US (Westchester County, NY)
+- Missing last datapoint: US (Williamson County, TN)
+- Dataseries have gap(s): US (Wisconsin)
+- Missing last datapoint: US (Wuhan Evacuee)
+- Dataseries have gap(s): US (Wyoming)
+- Missing last datapoint: US (Yolo County, CA)
+- Missing last datapoint: United Kingdom (UK)
+- Missing last datapoint: United Kingdom (United Kingdom)
+- Missing last datapoint: Vatican City
+- Unknown location: Venezuela
+- Dataseries have gap(s): Vietnam
+- Unknown location: Zimbabwe
+
+Adjusted cumulative amounts for dataseries where cumulative amounts weren't.. cumulative.
+- deaths at Australia (New South Wales)
+- deaths at Canada (Quebec)
+- deaths at Iceland
+- deaths at India
+- deaths at Japan
+- deaths at Kazakhstan
+- deaths at Slovakia
+- confirmed at Australia (Northern Territory)
+- confirmed at Australia (Queensland)
+- confirmed at Azerbaijan
+- confirmed at Bahrain
+- confirmed at Canada (Alberta)
+- confirmed at China (Guizhou)
+- confirmed at Guyana
+- confirmed at Japan
+- confirmed at Lebanon
+- confirmed at Montenegro
+- confirmed at US (Grand Princess)
+- recovered at Algeria
+- recovered at Andorra
+- recovered at Austria
+- recovered at Azerbaijan
+- recovered at Belgium
+- recovered at Canada (British Columbia)
+- recovered at China (Heilongjiang)
+- recovered at Egypt
+- recovered at Ethiopia
+- recovered at Iceland
+- recovered at Iraq
+- recovered at Italy
+- recovered at Pakistan
+- recovered at Poland
+- recovered at Sri Lanka
+- recovered at Togo
+- recovered at Trinidad and Tobago
