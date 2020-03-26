@@ -148,6 +148,7 @@ export class DomainStore {
                 }
             }
         }
+        console.log([...new Map(domainNames)])
 
         const max = this.domainsRaw.reduce((max2, domain) => {
             return domain.cases.reduce((max3, datum) => max3 > datum[CASE_INDEX.DATE] ? max3 : datum[CASE_INDEX.DATE], '2020-01-01')
@@ -171,7 +172,7 @@ export class DomainStore {
         runInAction(() => {
             this.lastDateInData = lastDateInData
             this.domains = domains
-            this.domainNames = domainNames
+            this.domainNames = [...new Map(domainNames)]
         })
     }
 
