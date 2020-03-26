@@ -9,6 +9,14 @@ from datetime import date, timedelta, datetime
 
 url_template = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/{:02d}-{:02d}-2020.csv"
 
+def normalize_zero(something):
+    if isinstance(something, int):
+        return something
+    if isinstance(something, str):
+        if something == '':
+            return 0
+        else:
+            return int(something)
 
 def isVer1(headerRow):
     HEAD = '\uFEFFProvince/State,Country/Region,Last Update,Confirmed,Deaths,Recovered'
@@ -23,14 +31,14 @@ def parseVersion1(row, date):
     returns:
         tuple of (city, country, date, confirmed, deaths, recovered)
     """
-    return (row[0], row[1], date, row[3], row[4], row[5])
+    return (row[0], row[1], date, normalize_zero(row[3]), normalize_zero(row[4]), normalize_zero(row[5]))
 
 def parseVersion2(row, date):
     """
     returns:
         tuple of (city, country, date, confirmed, deaths, recovered)
     """
-    return (row[2], row[3], date, row[7], row[8], row[9])
+    return (row[2], row[3], date, normalize_zero(row[7]), normalize_zero(row[8]), normalize_zero(row[9]))
 
 if __name__ == '__main__':
     records = []
