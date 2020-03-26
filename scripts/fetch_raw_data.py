@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from unicodedata import normalize, name
 import urllib.request
 import sqlite3
 import os
@@ -8,6 +9,28 @@ from datetime import date, timedelta, datetime
 
 url_template = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/{:02d}-{:02d}-2020.csv"
 
+
+def isVer1(headerRow):
+    HEAD = '\uFEFFProvince/State,Country/Region,Last Update,Confirmed,Deaths,Recovered'
+    return ','.join(headerRow) == HEAD
+
+def isVer2(headerRow):
+    HEAD = 'FIPS,Admin2,Province_State,Country_Region,Last_Update,Lat,Long_,Confirmed,Deaths,Recovered,Active,Combined_Key'
+    return ','.join(headerRow) == HEAD
+
+def parseVersion1(row, date):
+    """
+    returns:
+        tuple of (city, country, date, confirmed, deaths, recovered)
+    """
+    return (row[0], row[1], date, row[3], row[4], row[5])
+
+def parseVersion2(row, date):
+    """
+    returns:
+        tuple of (city, country, date, confirmed, deaths, recovered)
+    """
+    return (row[2], row[3], date, row[7], row[8], row[9])
 
 if __name__ == '__main__':
     records = []
@@ -25,14 +48,24 @@ if __name__ == '__main__':
             break
 
         with open(filepath) as csv_file:
+
             csv_reader = csv.reader(csv_file, delimiter=',')
             line_count = 0
             for row in csv_reader:
                 if line_count == 0: #skip header
+                    if(isVer1(row)):
+                        parser = parseVersion1
+                    if(isVer2(row)):
+                        parser = parseVersion2
+
+                    if('parser' not in vars()):
+                        print('error: No parser for "' + filepath + '": ' + ','.join(row))
+                        raise Exception()
+
                     line_count += 1
                     continue
 
-                records.append((row[0], row[1], current_date, row[3], row[4], row[5]))
+                records.append(parser(row, current_date))
                 line_count += 1
 
         current_date = current_date + timedelta(days=1)
