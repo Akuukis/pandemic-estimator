@@ -94,7 +94,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                     <Typography paragraph>
                         Although they provide very comprehensive and up-to-date information that most of the (global) online dashboards rely on,
                         they are not without faults and errors as shown by outstanding 500+ issues and 100+ pull requests.
-                        Please see full list of ommited or adjusted dataseries at state/province level <a target='_blank' rel='noopener noreferrer' href='//github.com/Akuukis/pandemic-estimator'>here</a>. Notable exclusions: Brazil, France, Denmark, Iran, Russia and others fully or partially.
+                        Please see full list of ommited or adjusted dataseries at state/province level <a target='_blank' rel='noopener noreferrer' href='//github.com/Akuukis/pandemic-estimator'>here</a>. Notable exclusions: USA, Brazil, France, Denmark, Iran, Russia and others fully or partially.
                     </Typography>
                 </Grid>
             </Grid>

@@ -112,8 +112,11 @@ def extract_location(country_city):
         location['status'] = 'error_not_found'
         return location
 
-    if country == 'US':
+    if country == 'US' or country == 'United States':
         country = 'United States'
+        # US is just a mess.
+        location['status'] = 'error_not_found'
+        return location
 
     if country == 'UK':
         country = 'United Kingdom'
@@ -244,11 +247,12 @@ if __name__ == '__main__':
     countries_arr = []
 
     for country_city in countries_cities:
+        debug_details = 'country="' + country_city[0] + '", subdivision="' + country_city[1] + '"'
+
         location_data = extract_location(country_city)
         if location_data['status'] == 'error_not_found':
             print('[ERROR] Unknown location: ' + debug_details)
             continue
-        debug_details = 'country="' + country_city[0] + '", subdivision="' + country_city[1] + '"'
 
         c2 = conn.cursor()
         c2.execute('SELECT date, confirmed, deaths, recovered FROM records where country = ? and city = ? order by date asc', country_city)
