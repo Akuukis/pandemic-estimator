@@ -13,7 +13,7 @@ install:
 	pip3 install -r requirements.txt --user
 	yarn
 
-update:
+update-jsu:
 	./scripts/fetch_raw_data.py
 	./scripts/export.py
 
