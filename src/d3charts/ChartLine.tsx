@@ -228,9 +228,9 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
         }
         const linedata = ([
                 'cases',
-                'active',
                 'deaths',
                 'recovered',
+                'active',
                 'actualMin',
                 'actualMax',
             ] as (keyof IChartLineDatum)[]).map((prop) => data.map<IData>((d) => ({
