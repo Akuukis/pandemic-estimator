@@ -66,7 +66,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                     <Typography gutterBottom variant='h4'>Default Argument values</Typography>
                     <Typography paragraph component='div'>
                         The default values for each of the three arguments are set as a small spread around the estimated value presented in the article.
-                        The minimum and maximum value for each of the three arguments are set according to the minimum and maximum value found by the linked researches linked in Tomas Pueyo's article or worksheet.
+                        The minimum and maximum value for each of the three arguments are set according to the minimum and maximum value found by the linked researches linked in Tomas Pueyo&apos;s article or worksheet.
                     </Typography>
 
                     <Typography gutterBottom variant='h4'>Running Average</Typography>
@@ -85,16 +85,12 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
 
                     <Typography gutterBottom variant='h2'>Data</Typography>
                     <Typography paragraph>
-                        We use data from <a target='_blank' rel='noopener noreferrer' href='https://systems.jhu.edu/'>CSSE at Johns Hopkins University</a> git repository on <a target='_blank' rel='noopener noreferrer' href='//github.com/CSSEGISandData/COVID-19'>github</a>.
+                        We use data from <a target='_blank' rel='noopener noreferrer' href='https://coronadatascraper.com/#home'>Corona Data Scraper</a> API,
+                        that aggregates and normalizes COVID-19 data from verified source like Johns Hopkins University, World Trade Organization, and others.
                         They provide daily data on confirmed cases of COVID-19, as well as deaths and cases of recovery grouped by country or lower level.
                     </Typography>
                     <Typography paragraph>
-                        We use their daily reports <a target='_blank' rel='noopener noreferrer' href='//github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports'>here</a>, out of which some are ignored due to corrupt structure and/or missing data points.
-                    </Typography>
-                    <Typography paragraph>
-                        Although they provide very comprehensive and up-to-date information that most of the (global) online dashboards rely on,
-                        they are not without faults and errors as shown by outstanding 500+ issues and 100+ pull requests.
-                        Please see full list of ommited or adjusted dataseries at state/province level <a target='_blank' rel='noopener noreferrer' href='//github.com/Akuukis/pandemic-estimator'>here</a>. Notable exclusions: USA, Brazil, France, Denmark, Iran, Russia and others fully or partially.
+                        Please learn more details of their methodology and sources <a target='_blank' rel='noopener noreferrer' href='https://coronadatascraper.com/#sources'>here</a>.
                     </Typography>
                 </Grid>
             </Grid>
