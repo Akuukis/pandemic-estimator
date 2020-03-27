@@ -1,10 +1,14 @@
 import { action, computed, observable, runInAction } from 'mobx'
+import worldCountries from 'world-countries'
 
 import { PiwikStore } from './PiwikStore'
 import * as moment from 'moment'
 
 
-const WORLD = 'World'
+const getName = (cca3: string): string => {
+    const title = worldCountries.find((country) => country.cca3 === cca3)?.name?.common ?? cca3
+    return title
+}
 
 export interface ILocationDate {
     cases?: number
@@ -139,18 +143,17 @@ export class DomainStore {
         const domainNames = [...this.domainNames]
         for(const domain of domainsRaw) {
             if(domain.city) {
-                domainNames.push([domain.featureId, `${domain.country}: ${domain.state}: ${domain.county}: ${domain.city}`])
+                domainNames.push([domain.featureId, `${getName(domain.country)}: ${domain.state}: ${domain.county}: ${domain.city}`])
             } else if (domain.county) {
-                domainNames.push([domain.featureId, `${domain.country}: ${domain.state}: ${domain.county}`])
+                domainNames.push([domain.featureId, `${getName(domain.country)}: ${domain.state}: ${domain.county}`])
             } else if (domain.state) {
-                domainNames.push([domain.featureId, `${domain.country}: ${domain.state}`])
+                domainNames.push([domain.featureId, `${getName(domain.country)}: ${domain.state}`])
             } else {
-                domainNames.push([domain.featureId, `${domain.country}`])
+                domainNames.push([domain.featureId, `${getName(domain.country)}`])
             }
         }
         const domainNamesSorted = [...new Map(domainNames)]
             .sort((a, b) => a[1] < b[1] ? -1 : 1)
-        console.log(domainNamesSorted)
 
         const max = domainsRaw.reduce((max2, domain) => {
             return Object.keys(domain.dates).reduce((max3, date) => max3 > date ? max3 : date, '2020-01-01')
