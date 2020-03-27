@@ -32,6 +32,8 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
         <Paper square className={classes.root}>
             <ChartLine
                 data={locationStore.data}
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                credits={locationStore.location!.url}
                 lockdownDate={locationStore.modelArgs.lockdown}
             />
         </Paper>

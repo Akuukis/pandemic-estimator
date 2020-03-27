@@ -29,10 +29,14 @@ const styles = (theme: IMyTheme) => createStyles({
     },
 
     xAxis: {
+        '& .tick text': {
+            fill: theme.palette.primary.main,
+            fontWeight: 500,
+        },
     },
     yAxis: {
         '& .tick text': {
-            color: 'white',
+            fill: theme.palette.primary.light,
             fontWeight: 500,
         },
         '& .tick line': {
@@ -73,12 +77,18 @@ const styles = (theme: IMyTheme) => createStyles({
     },
     path: {
     },
+    credits: {
+        fontSize: '0.625rem',
+        fontFamily: theme.fontFamily.mono,
+        fill: theme.palette.primary.dark,
+    },
 })
 
 const TRANSITION_DURATION = 750
 
 export interface IProps extends IChartProps {
     data: IChartLineDatum[]
+    credits: string
     lockdownDate: Date
     dividerOffset?: 'lastDayOfWeek' | 'firstMonthOfYear'
 }
@@ -100,8 +110,9 @@ export type IChartLineDatum = ILocationDateExtended
 type PropsFC = FunctionComponentProps<IProps, keyof ReturnType<typeof styles>>
 
 class D3ChartLine extends AbstractD3Chart<PropsFC> {
-    public static MARGIN = {top: 20, right: 50, bottom: 30, left: 30}
+    public static MARGIN = {top: 20, right: 50, bottom: 50, left: 30}
     protected chart: d3.Selection<Element, {}, null, undefined>
+    protected credits: d3.Selection<SVGTextElement, {}, null, undefined>
     protected divider: d3.Selection<SVGLineElement, {}, null, undefined>
     protected area: d3.Selection<SVGGElement, {}, null, undefined>
     protected lines: d3.Selection<SVGGElement, {}, null, undefined>
@@ -148,12 +159,15 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
             .attr("stroke-width", 3)
             .attr("stroke-linejoin", "round")
             .attr("stroke-linecap", "round")
+
+        this.credits = this.svg.append('g').append('text')
+            .classed(this.classes.credits, true)
     }
 
 
     public update(props: Omit<PropsFC, 'classes'>) {
         super.update(props)
-        const {data, lockdownDate, dividerOffset} = props
+        const {credits, data, lockdownDate, dividerOffset} = props
 
         if(process.env.NODE_ENV === 'development') console.log('chart data', data)
 
@@ -316,6 +330,10 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
                 .transition('opacity')
                 .attr('opacity', 1)
         }
+
+        this.credits
+            .attr('transform', `translate(${D3ChartLine.MARGIN.left}, ${this.height - D3ChartLine.MARGIN.bottom/4})`)
+            .text(`source: ${credits}`)
 
 
         this.xScaleOld = xScale
