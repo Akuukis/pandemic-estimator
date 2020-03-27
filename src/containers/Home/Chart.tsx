@@ -20,19 +20,19 @@ interface IProps {
 }
 
 export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...props}) => {
-    const domainStore = React.useContext(CONTEXT.DOMAIN)
+    const locationStore = React.useContext(CONTEXT.LOCATION)
 
     useAsyncEffectOnce(() => {
-        return domainStore.init()
+        return locationStore.init()
     })
 
-    if(domainStore.data === undefined) return (<Paper square className={classes.root} />)
+    if(locationStore.data === undefined) return (<Paper square className={classes.root} />)
 
     return (
         <Paper square className={classes.root}>
             <ChartLine
-                data={domainStore.data}
-                lockdownDate={domainStore.modelArgs.lockdown}
+                data={locationStore.data}
+                lockdownDate={locationStore.modelArgs.lockdown}
             />
         </Paper>
     )

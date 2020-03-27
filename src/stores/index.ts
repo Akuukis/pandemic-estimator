@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext } from 'react'
 
-import { DomainStore } from './DomainStore'
+import { LocationStore } from './LocationStore'
 import { PiwikStore } from './PiwikStore'
 
 
 // tslint:disable: no-any
 export const CONTEXT = {
-    DOMAIN: createContext<DomainStore>(null as any),
+    LOCATION: createContext<LocationStore>(null as any),
     PIWIK: createContext<PiwikStore>(null as any),
 }
 

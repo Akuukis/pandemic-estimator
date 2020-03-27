@@ -9,7 +9,7 @@ import { MY_THEME } from './common'
 import routes from './routes'
 import { CONTEXT } from './stores'
 import { PiwikStore } from './stores/PiwikStore'
-import { DomainStore } from './stores/DomainStore'
+import { LocationStore } from './stores/LocationStore'
 
 // enable MobX strict mode
 configure({ enforceActions: 'always' })
@@ -23,17 +23,17 @@ const piwikStore = new PiwikStore(process.env.NODE_ENV === 'development' ? {} : 
     siteId: __MATOMO_SITE_ID__,
     url: __MATOMO_URL__,
 })
-const domainStore = new DomainStore(piwikStore)
+const locationStore = new LocationStore(piwikStore)
 
 render((
         <ThemeProvider theme={MY_THEME}>
             <CONTEXT.PIWIK.Provider value={piwikStore}>
-            <CONTEXT.DOMAIN.Provider value={domainStore}>
+            <CONTEXT.LOCATION.Provider value={locationStore}>
                 {routes}
-            </CONTEXT.DOMAIN.Provider>
+            </CONTEXT.LOCATION.Provider>
             </CONTEXT.PIWIK.Provider>
         </ThemeProvider>
     ),
     document.getElementById('root'),
-    // () => {domainStore.init()},
+    // () => {locationStore.init()},
 )

@@ -7,10 +7,10 @@ import { Grid, Slider, Typography } from '@material-ui/core'
 
 import { createSmartFC, createStyles, IMyTheme } from '../common/'
 import { CONTEXT } from '../stores'
-import { DomainStore } from '../stores/DomainStore'
+import { LocationStore } from '../stores/LocationStore'
 
 
-const REF = DomainStore.START()
+const REF = LocationStore.START()
 
 const format = (sliderValue: number) => {
     return moment().diff(REF, 'd') === sliderValue ? 'no lockdown' : moment(REF).add(sliderValue, 'd').format('MMM\u00A0D')
@@ -37,16 +37,16 @@ interface IProps {
 
 export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...props}) => {
     const {title, min, max} = props
-    const domainStore = React.useContext(CONTEXT.DOMAIN)
+    const locationStore = React.useContext(CONTEXT.LOCATION)
 
-    const [value, setValue] = React.useState<Date>(domainStore.modelArgs.lockdown)
+    const [value, setValue] = React.useState<Date>(locationStore.modelArgs.lockdown)
 
     const handleChange = (event, newValue) => {
         setValue(moment(REF).add(newValue, 'd').toDate())
     }
 
     const onChangeCommitted = action(() => {
-        domainStore.modelArgs.lockdown = value
+        locationStore.modelArgs.lockdown = value
     })
 
 
@@ -60,7 +60,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                 </Typography>
             </Grid>
             <Grid item>
-                <Typography>{format(moment(domainStore.modelArgs.lockdown).diff(REF, 'd'))}</Typography>
+                <Typography>{format(moment(locationStore.modelArgs.lockdown).diff(REF, 'd'))}</Typography>
             </Grid>
             <Grid item xs={12}>
                 <Slider

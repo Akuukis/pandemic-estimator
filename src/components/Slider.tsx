@@ -7,7 +7,7 @@ import IconInfoOutlined from '@material-ui/icons/InfoOutlined'
 
 import { createSmartFC, createStyles, IMyTheme } from '../common/'
 import { CONTEXT } from '../stores'
-import { IModelArgsExpanded } from '../stores/DomainStore'
+import { IModelArgsExpanded } from '../stores/LocationStore'
 
 
 const styles = (theme: IMyTheme) => createStyles({
@@ -41,21 +41,21 @@ interface IProps {
 
 export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...props}) => {
     const {percent, title, tooltip, argKey, min, max, step, format} = props
-    const domainStore = React.useContext(CONTEXT.DOMAIN)
+    const locationStore = React.useContext(CONTEXT.LOCATION)
     const piwikStore = React.useContext(CONTEXT.PIWIK)
 
     const resetState = () => [
-        String(domainStore.modelArgs[argKey][0] * (percent ? 100 : 1)),
-        String(domainStore.modelArgs[argKey][1] * (percent ? 100 : 1)),
+        String(locationStore.modelArgs[argKey][0] * (percent ? 100 : 1)),
+        String(locationStore.modelArgs[argKey][1] * (percent ? 100 : 1)),
     ]
 
     const [value, setValue] = React.useState(resetState())
-    React.useEffect(() => reaction(() => domainStore.modelArgs, () => {
+    React.useEffect(() => reaction(() => locationStore.modelArgs, () => {
         setValue(resetState())
     }))
 
     const onChangeCommitted = action(() => {
-        domainStore.modelArgs[argKey] = [
+        locationStore.modelArgs[argKey] = [
             Number(value[0]) / (percent ? 100 : 1),
             Number(value[1]) / (percent ? 100 : 1),
         ]
@@ -64,8 +64,8 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
             'trackEvent',
             'model',
             `argument-${argKey}`,
-            (domainStore.modelArgs[argKey][0] + domainStore.modelArgs[argKey][1]) / 2,
-            domainStore.modelArgs[argKey][1] - domainStore.modelArgs[argKey][0],
+            (locationStore.modelArgs[argKey][0] + locationStore.modelArgs[argKey][1]) / 2,
+            locationStore.modelArgs[argKey][1] - locationStore.modelArgs[argKey][0],
         ])
     })
 

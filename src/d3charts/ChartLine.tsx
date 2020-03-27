@@ -9,7 +9,7 @@ import { createStyles } from '@material-ui/styles'
 import { FunctionComponentProps, IMyTheme, createSmartFC } from '../common'
 import { AbstractD3Chart, IChartProps, useChart } from './AbstractChart'
 import RemountOnRetheme from './RemountOnRetheme'
-import { DomainStore, ILocationDateExtended } from '../stores/DomainStore'
+import { LocationStore, ILocationDateExtended } from '../stores/LocationStore'
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-function-return-type
@@ -118,7 +118,7 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
         const chartWidth = this.width - D3ChartLine.MARGIN.left - D3ChartLine.MARGIN.right
         const chartHeight = this.height - D3ChartLine.MARGIN.top - D3ChartLine.MARGIN.bottom
         this.xScaleOld = d3.scaleTime()
-            .domain([DomainStore.START().toDate(), moment().toDate()])
+            .domain([LocationStore.START().toDate(), moment().toDate()])
             .range([0, chartWidth])
         this.yScaleOld = d3.scaleLinear()
             .domain([0, 0])
@@ -165,7 +165,7 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
         const maxValue = Math.ceil(maxValuePrecise / scale) * scale
 
         const xScale = d3.scaleTime()
-            .domain([DomainStore.START().toDate(), moment().add(-1, 'd').toDate()])
+            .domain([LocationStore.START().toDate(), moment().add(-1, 'd').toDate()])
             .range([0, chartWidth])
 
         const yScale = d3.scaleLinear()

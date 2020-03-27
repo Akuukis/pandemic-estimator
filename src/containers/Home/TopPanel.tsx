@@ -34,9 +34,9 @@ interface IProps {
 
 
 export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...props}) => {
-    const domainStore = React.useContext(CONTEXT.DOMAIN)
+    const locationStore = React.useContext(CONTEXT.LOCATION)
 
-    const today = domainStore.data?.[domainStore.data.length - 1]
+    const today = locationStore.data?.[locationStore.data.length - 1]
 
     const getActualEstimate = () => {
         if(today === undefined) return '-'
@@ -91,8 +91,8 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                     <TopPanelIcon
                         value={<Switch
                             classes={{root: classes.fixSwitch}}
-                            checked={domainStore.smooth}
-                            onChange={domainStore.setSmooth}
+                            checked={locationStore.smooth}
+                            onChange={locationStore.setSmooth}
                         />}
                         title='Smooth'
                         tooltip='Smooth Estimated Actual cases across 7 days.'

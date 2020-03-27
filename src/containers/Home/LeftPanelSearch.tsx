@@ -32,7 +32,7 @@ interface IProps {
 
 
 export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...props}) => {
-    const domainStore = React.useContext(CONTEXT.DOMAIN)
+    const locationStore = React.useContext(CONTEXT.LOCATION)
 
     const filterOptions = (options, { inputValue }) => {
         return matchSorter(options, inputValue);
@@ -50,11 +50,11 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                     selectOnFocus
                     id="combo-box-demo"
                     classes={{paper: classes.paper}}
-                    options={domainStore.domainNames}
+                    options={locationStore.titles}
                     getOptionLabel={option => option[1]}
                     filterOptions={filterOptions}
-                    value={domainStore.domainNames.find((domain) => domain[0] === domainStore.selector) || domainStore.selector}
-                    onChange={(event, value)=>domainStore.setSelectedDomain(value)}
+                    value={locationStore.titles.find((location) => location[0] === locationStore.selector) || locationStore.selector}
+                    onChange={(event, value)=>locationStore.setSelectedDomain(value)}
                     renderInput={(params) => (<TextField {...params} variant="outlined" InputProps={{
                             ...params.InputProps,
                             className: classes.location,

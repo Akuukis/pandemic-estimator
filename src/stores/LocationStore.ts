@@ -37,12 +37,12 @@ export enum LOCATION_TYPE {
 /**
  * Cases are daily data series that starts on `2020-01-01`
  */
-export interface IRaw<TType extends LOCATION_TYPE = LOCATION_TYPE, TCase extends ILocationDate | ILocationDateExtended = ILocationDate> {
+export interface ILocation<TLocDate extends ILocationDate | ILocationDateExtended = ILocationDate, TType extends LOCATION_TYPE = LOCATION_TYPE> {
     city: TType extends LOCATION_TYPE.CITY ? string : never
     county: TType extends LOCATION_TYPE.CITY | LOCATION_TYPE.COUNTY ? string : never
     state: TType extends LOCATION_TYPE.CITY | LOCATION_TYPE.COUNTY | LOCATION_TYPE.STATE ? string : never
     country: string  // cca3
-    dates: Record<string, TCase>
+    dates: TLocDate extends ILocationDateExtended ? ILocationDateExtended[] : Record<string, ILocationDate>
     maintainers: unknown
     url: string
     aggregate: LOCATION_TYPE
@@ -106,7 +106,7 @@ const smoothDeaths = (i: number, array: [string, ILocationDate][]): number => {
  * - **dataRaw**: merged selected domains into one.
  * - **data**: add active and estimated actual cases.
  */
-export class DomainStore {
+export class LocationStore {
     public static START = (): moment.Moment => moment('2020-02-01')
     public static readonly EXTREME_ARGS: IModelArgsExpanded = {
         lockdown: moment().toDate(),
@@ -123,10 +123,10 @@ export class DomainStore {
         daysToDoubleAfter: [12, 14],
     }
 
-    @observable.deep public modelArgs: IModelArgsExpanded = DomainStore.DEFAULT_ARGS
+    @observable.deep public modelArgs: IModelArgsExpanded = LocationStore.DEFAULT_ARGS
 
     private piwikStore: PiwikStore
-    @observable public domainNames: [number, string][] = []  // [[WORLD, WORLD]]
+    @observable public titles: [number, string][] = []  // [[WORLD, WORLD]]
     @observable public selector = 338  // 'Italy'
     @observable public smooth = true
 
@@ -135,36 +135,36 @@ export class DomainStore {
     }
 
     @action public async init() {
-        if(this.domains !== undefined) return
+        if(this.locations !== undefined) return
 
         const response = (await fetch('https://coronadatascraper.com/timeseries-byLocation.json'))
-        const domainsRaw: IRaw[] = Object.values(await response.json())
+        const locationsRaw: ILocation[] = Object.values(await response.json())
 
-        const domainNames = [...this.domainNames]
-        for(const domain of domainsRaw) {
-            if(domain.city) {
-                domainNames.push([domain.featureId, `${getName(domain.country)}: ${domain.state}: ${domain.county}: ${domain.city}`])
-            } else if (domain.county) {
-                domainNames.push([domain.featureId, `${getName(domain.country)}: ${domain.state}: ${domain.county}`])
-            } else if (domain.state) {
-                domainNames.push([domain.featureId, `${getName(domain.country)}: ${domain.state}`])
+        const domainNames = [...this.titles]
+        for(const location of locationsRaw) {
+            if(location.city) {
+                domainNames.push([location.featureId, `${getName(location.country)}: ${location.state}: ${location.county}: ${location.city}`])
+            } else if (location.county) {
+                domainNames.push([location.featureId, `${getName(location.country)}: ${location.state}: ${location.county}`])
+            } else if (location.state) {
+                domainNames.push([location.featureId, `${getName(location.country)}: ${location.state}`])
             } else {
-                domainNames.push([domain.featureId, `${getName(domain.country)}`])
+                domainNames.push([location.featureId, `${getName(location.country)}`])
             }
         }
         const domainNamesSorted = [...new Map(domainNames)]
             .sort((a, b) => a[1] < b[1] ? -1 : 1)
 
-        const max = domainsRaw.reduce((max2, domain) => {
-            return Object.keys(domain.dates).reduce((max3, date) => max3 > date ? max3 : date, '2020-01-01')
+        const max = locationsRaw.reduce((max2, location) => {
+            return Object.keys(location.dates).reduce((max3, date) => max3 > date ? max3 : date, '2020-01-01')
         }, '2020-01-01')
 
         const lastDateInData = moment(max)
 
         runInAction(() => {
             this.lastDateInData = lastDateInData
-            this.domains = Object.values(domainsRaw)
-            this.domainNames = domainNamesSorted
+            this.locations = Object.values(locationsRaw)
+            this.titles = domainNamesSorted
         })
     }
 
@@ -174,21 +174,15 @@ export class DomainStore {
      * Normalized input data, where length of cases are truncated or padded
      * to have equal length from 1 Feb to latest date found in data.
      */
-    @observable private domains: undefined | IRaw[]
-
-    /**
-     * Select one location.
-     * based on `this.selector`.
-     */
-    @computed private get dataRaw(): undefined | IRaw {
-        if(!this.domains) return undefined
-        return this.domains.find((domain) => domain.featureId === this.selector)
-    }
+    @observable private locations: undefined | ILocation[]
 
     @computed public get data(): undefined | ILocationDateExtended[] {
-        if(!this.dataRaw) return undefined
+        if(!this.locations) return undefined
 
-        return Object.entries(this.dataRaw.dates).map(([date, datum], i, array): ILocationDateExtended => {
+        const locationRaw = this.locations.find((location) => location.featureId === this.selector)
+        if(!locationRaw) return undefined
+
+        return Object.entries(locationRaw.dates).map(([date, datum], i, array): ILocationDateExtended => {
             const deaths = datum.deaths ?? 0
             const deathsPrev = i === 0 ? 0 : array[i-1][1].deaths ?? 0
             const deathsDelta = this.smooth
@@ -217,6 +211,19 @@ export class DomainStore {
                 growthFactor: datum.growthFactor ?? null,
             }
         })
+    }
+
+    @computed public get location(): undefined | ILocation<ILocationDateExtended> {
+        if(!this.locations) return undefined
+
+        const locationRaw = this.locations.find((location) => location.featureId === this.selector)
+        if(!locationRaw) return undefined
+
+        return {
+            ...locationRaw,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            dates: this.data!,
+        }
     }
 
     public setSelectedDomain = action((domainEntry: [number, string]) => {

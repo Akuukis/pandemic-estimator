@@ -6,7 +6,7 @@ import { Button, Typography } from '@material-ui/core'
 
 import { createSmartFC, createStyles, IMyTheme } from '../../common/'
 import { CONTEXT } from '../../stores'
-import { DomainStore } from '../../stores/DomainStore'
+import { LocationStore } from '../../stores/LocationStore'
 
 
 const styles = (theme: IMyTheme) => createStyles({
@@ -21,10 +21,10 @@ interface IProps {
 }
 
 export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...props}) => {
-    const domainStore = React.useContext(CONTEXT.DOMAIN)
+    const locationStore = React.useContext(CONTEXT.LOCATION)
 
     const reset = action(() => {
-        domainStore.modelArgs = DomainStore.DEFAULT_ARGS
+        locationStore.modelArgs = LocationStore.DEFAULT_ARGS
     })
 
     return (

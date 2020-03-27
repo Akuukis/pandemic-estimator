@@ -7,7 +7,7 @@ import { createSmartFC, createStyles, IMyTheme } from '../../common/'
 import Slider from '../../components/Slider'
 import LeftPanelReset from './LeftPanelReset'
 import LeftPanelSearch from './LeftPanelSearch'
-import { DomainStore } from '../../stores/DomainStore'
+import { LocationStore } from '../../stores/LocationStore'
 
 const formatDeathRate = (value: number) => `${value.toFixed(1)}%`
 const formatDays = (value: number) => `${value.toString()}`
@@ -52,8 +52,8 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                 title='AVG Days to Double'
                 tooltip='Range of days it takes to have twice as much COVID-19 cases on average.'
                 argKey='daysToDouble'
-                min={DomainStore.EXTREME_ARGS.daysToDouble[0]}
-                max={DomainStore.EXTREME_ARGS.daysToDouble[1]}
+                min={LocationStore.EXTREME_ARGS.daysToDouble[0]}
+                max={LocationStore.EXTREME_ARGS.daysToDouble[1]}
                 step={0.5}
                 format={formatDays}
             />
@@ -62,8 +62,8 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                 tooltip='% of Confirmed cases that ended with Death.'
                 argKey='deathRate'
                 percent
-                min={DomainStore.EXTREME_ARGS.deathRate[0]}
-                max={DomainStore.EXTREME_ARGS.deathRate[1]}
+                min={LocationStore.EXTREME_ARGS.deathRate[0]}
+                max={LocationStore.EXTREME_ARGS.deathRate[1]}
                 step={0.001}
                 format={formatDeathRate}
             />
@@ -71,8 +71,8 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                 title='AVG Days to Death'
                 tooltip='How many days it takes for individual from getting infected to dying.'
                 argKey='daysToDeath'
-                min={DomainStore.EXTREME_ARGS.daysToDeath[0]}
-                max={DomainStore.EXTREME_ARGS.daysToDeath[1]}
+                min={LocationStore.EXTREME_ARGS.daysToDeath[0]}
+                max={LocationStore.EXTREME_ARGS.daysToDeath[1]}
                 step={0.5}
                 format={formatDays}
             />
