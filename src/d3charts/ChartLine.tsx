@@ -174,7 +174,7 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
         const chartWidth = this.width - D3ChartLine.MARGIN.left - D3ChartLine.MARGIN.right
         const chartHeight = this.height - D3ChartLine.MARGIN.top - D3ChartLine.MARGIN.bottom
 
-        const maxValuePrecise = d3.max(data, (d) => Math.max(d.actualMax, d.cases)) as number
+        const maxValuePrecise = d3.max(data, (d) => Math.max(d.actualMax, d.confirmed)) as number
         const scale = Math.pow(10, Math.ceil(Math.log10(maxValuePrecise))) / 10
         const maxValue = Math.ceil(maxValuePrecise / scale) * scale
 

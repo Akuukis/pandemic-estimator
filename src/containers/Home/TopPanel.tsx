@@ -57,7 +57,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                 </Grid>
                 <Grid item xs={6} sm={4} lg={2}>
                     <TopPanelIcon
-                        value={today === undefined ? '-' : formatDecimal(today.cases)}
+                        value={today === undefined ? '-' : formatDecimal(today.confirmed)}
                         title='Confirmed'
                         tooltip='Official amount of people that got a positive result of COVID-19'
                         color='yellow'

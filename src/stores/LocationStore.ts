@@ -17,9 +17,9 @@ export interface ILocationDate {
     active?: number
     growthFactor?: number | null
 }
-export interface ILocationDateExtended extends ILocationDate {
+export interface ILocationDateExtended {
     date: moment.Moment
-    cases: number
+    confirmed: number
     deaths: number
     recovered: number
     active: number
@@ -202,7 +202,7 @@ export class LocationStore {
 
             return {
                 date: moment(date),
-                cases: datum.cases ?? 0,
+                confirmed: datum.cases ?? 0,
                 deaths: datum.deaths ?? 0,
                 recovered: datum.recovered ?? 0,
                 active: datum.active ?? 0,
