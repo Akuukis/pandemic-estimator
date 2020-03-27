@@ -9,7 +9,7 @@ import { createStyles } from '@material-ui/styles'
 import { FunctionComponentProps, IMyTheme, createSmartFC } from '../common'
 import { AbstractD3Chart, IChartProps, useChart } from './AbstractChart'
 import RemountOnRetheme from './RemountOnRetheme'
-import { CASE_INDEX, ICase, DomainStore } from '../stores/DomainStore'
+import { DomainStore, ILocationDateExtended } from '../stores/DomainStore'
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-function-return-type
@@ -95,7 +95,7 @@ const Chart = createSmartFC(styles)<IProps>(({children, classes, ...props}) => {
 }) /* !============================================================================================================= */
 
 
-export type IChartLineDatum = ICase
+export type IChartLineDatum = ILocationDateExtended
 
 type PropsFC = FunctionComponentProps<IProps, keyof ReturnType<typeof styles>>
 
@@ -160,7 +160,7 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
         const chartWidth = this.width - D3ChartLine.MARGIN.left - D3ChartLine.MARGIN.right
         const chartHeight = this.height - D3ChartLine.MARGIN.top - D3ChartLine.MARGIN.bottom
 
-        const maxValuePrecise = d3.max(data, (d) => d3.max(d, (d2) => typeof d2 === 'number' ? d2 : 0)) as number
+        const maxValuePrecise = d3.max(data, (d) => Math.max(d.actualMax, d.cases)) as number
         const scale = Math.pow(10, Math.ceil(Math.log10(maxValuePrecise))) / 10
         const maxValue = Math.ceil(maxValuePrecise / scale) * scale
 
@@ -226,16 +226,16 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
             date: Date,
             value: number,
         }
-        const linedata = [
-                CASE_INDEX.CONFIRMED,
-                CASE_INDEX.DEATHS,
-                CASE_INDEX.RECOVERED,
-                CASE_INDEX.ACTIVE,
-                CASE_INDEX.ACTUAL_MIN,
-                CASE_INDEX.ACTUAL_MAX,
-            ].map((index) => data.map<IData>((d) => ({
-                date: moment(d[CASE_INDEX.DATE]).toDate(),
-                value: d[index] as number,
+        const linedata = ([
+                'cases',
+                'active',
+                'deaths',
+                'recovered',
+                'actualMin',
+                'actualMax',
+            ] as (keyof IChartLineDatum)[]).map((prop) => data.map<IData>((d) => ({
+                date: d.date.toDate(),
+                value: d[prop] as number,
             })))
         const lineOld = d3.line<IData>()
             .curve(d3.curveBasis)
@@ -246,16 +246,16 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
             .x((d) => xScale(d.date))
             .y((d) => yScale(d.value))
 
-        const areaOld = d3.area<ICase>()
+        const areaOld = d3.area<IChartLineDatum>()
             .curve(d3.curveBasis)
-            .x(d => this.xScaleOld(moment(d[CASE_INDEX.DATE]).toDate()))
-            .y0(d => this.yScaleOld(d[CASE_INDEX.ACTUAL_MIN]))
-            .y1(d => this.yScaleOld(d[CASE_INDEX.ACTUAL_MAX]))
-        const area = d3.area<ICase>()
+            .x(d => this.xScaleOld(d.date.toDate()))
+            .y0(d => this.yScaleOld(d.actualMin))
+            .y1(d => this.yScaleOld(d.actualMax))
+        const area = d3.area<IChartLineDatum>()
             .curve(d3.curveBasis)
-            .x(d => xScale(moment(d[CASE_INDEX.DATE]).toDate()))
-            .y0(d => yScale(d[CASE_INDEX.ACTUAL_MIN]))
-            .y1(d => yScale(d[CASE_INDEX.ACTUAL_MAX]))
+            .x(d => xScale(d.date.toDate()))
+            .y0(d => yScale(d.actualMin))
+            .y1(d => yScale(d.actualMax))
 
         const lockdown = d3.line<IData>()
             .x((d) => xScale(d.date))
@@ -301,7 +301,7 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
                     .attr("d", line)
 
         const lastDatum = data[data.length - 1]
-        if(lastDatum[CASE_INDEX.DEATHS] === 0) {
+        if(lastDatum.deaths === 0) {
             this.area
                 .transition('opacity')
                 .attr('opacity', 0)

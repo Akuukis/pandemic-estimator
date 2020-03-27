@@ -6,42 +6,48 @@ import * as moment from 'moment'
 
 const WORLD = 'World'
 
-export enum CASE_INDEX {
-    DATE = 0,
-    CONFIRMED = 1,
-    DEATHS = 2,
-    RECOVERED = 3,
-    ACTIVE = 4,
-    ACTUAL_MIN = 5,
-    ACTUAL_MAX = 6,
+export interface ILocationDate {
+    cases?: number
+    deaths?: number
+    recovered?: number
+    active?: number
+    growthFactor?: number | null
 }
-/**
- * A tuple of values in order:
- * - date YYYY-MM-DD
- * - Recovered
- * - Deaths
- * - Confirmed
- */
-export type IRawCase = [string, number, number, number]
-/**
- * A tuple of values in order:
- * - date YYYY-MM-DD
- * - Recovered
- * - Deaths
- * - Confirmed
- * - Actual (min)
- * - Actual (max)
- */
-export type ICase = [string, number, number, number, number, number, number]
+export interface ILocationDateExtended extends ILocationDate {
+    date: moment.Moment
+    cases: number
+    deaths: number
+    recovered: number
+    active: number
+    actualMin: number
+    actualMax: number
+    growthFactor: number | null
+}
+export enum LOCATION_TYPE {
+    COUNTRY = 'country',
+    STATE = 'state',
+    COUNTY = 'county',
+    CITY = 'city',
+}
 
 /**
  * Cases are daily data series that starts on `2020-01-01`
  */
-export interface IRaw<TCase extends IRawCase | ICase = IRawCase> {
+export interface IRaw<TType extends LOCATION_TYPE = LOCATION_TYPE, TCase extends ILocationDate | ILocationDateExtended = ILocationDate> {
+    city: TType extends LOCATION_TYPE.CITY ? string : never
+    county: TType extends LOCATION_TYPE.CITY | LOCATION_TYPE.COUNTY ? string : never
+    state: TType extends LOCATION_TYPE.CITY | LOCATION_TYPE.COUNTY | LOCATION_TYPE.STATE ? string : never
     country: string  // cca3
-    county: string | null
-    subdivision: string | null
-    cases: TCase[]
+    dates: Record<string, TCase>
+    maintainers: unknown
+    url: string
+    aggregate: LOCATION_TYPE
+    rating: number
+    curators: unknown
+    coordinates: [number, number]
+    tz: unknown
+    featureId: number
+    population: number
 }
 
 export interface IModelArgs {
@@ -72,18 +78,18 @@ const modelByTomasPueyo = (deaths: number, args: IModelArgs): number => {
  * - 2nd first and last data serie: average of 3 days (one day before and after)
  * - first and last data serie: no average.
  */
-const smoothDeaths = (i: number, array: IRawCase[]): number => {
-    if(i === 0) return array[i][CASE_INDEX.DEATHS]
+const smoothDeaths = (i: number, array: [string, ILocationDate][]): number => {
+    if(i === 0) return array[i][1].deaths ?? 0
 
     const deaths = [
-        (i > 3 && i+3 < array.length) ? array[i-4][CASE_INDEX.DEATHS] : undefined,
-        (i > 2 && i+2 < array.length) ? array[i-3][CASE_INDEX.DEATHS] : undefined,
-        (i > 1 && i+1 < array.length) ? array[i-2][CASE_INDEX.DEATHS] : undefined,
-        array[i-1][CASE_INDEX.DEATHS],
-        array[i][CASE_INDEX.DEATHS],
-        (i > 1 && i+1 < array.length) ? array[i+1][CASE_INDEX.DEATHS] : undefined,
-        (i > 2 && i+2 < array.length) ? array[i+2][CASE_INDEX.DEATHS] : undefined,
-        (i > 3 && i+3 < array.length) ? array[i+3][CASE_INDEX.DEATHS] : undefined,
+        (i > 3 && i+3 < array.length) ? (array[i-4][1].deaths ?? 0) : undefined,
+        (i > 2 && i+2 < array.length) ? (array[i-3][1].deaths ?? 0) : undefined,
+        (i > 1 && i+1 < array.length) ? (array[i-2][1].deaths ?? 0) : undefined,
+        (array[i-1][1].deaths ?? 0),
+        (array[i][1].deaths ?? 0),
+        (i > 1 && i+1 < array.length) ? (array[i+1][1].deaths ?? 0) : undefined,
+        (i > 2 && i+2 < array.length) ? (array[i+2][1].deaths ?? 0) : undefined,
+        (i > 3 && i+3 < array.length) ? (array[i+3][1].deaths ?? 0) : undefined,
     ].filter((death): death is number => death !== undefined)
     const deathsDelta = (deaths[deaths.length - 1] - deaths[0]) / (deaths.length - 1)
     return deathsDelta
@@ -113,15 +119,11 @@ export class DomainStore {
         daysToDoubleAfter: [12, 14],
     }
 
-    /**
-     * Store raw data. This IS NOT used for chart, see `this.domains`.
-     */
-    private domainsRaw: undefined | IRaw[]
     @observable.deep public modelArgs: IModelArgsExpanded = DomainStore.DEFAULT_ARGS
 
     private piwikStore: PiwikStore
-    @observable public domainNames: [string, string][] = []  // [[WORLD, WORLD]]
-    @observable public selector = 'Italy'
+    @observable public domainNames: [number, string][] = []  // [[WORLD, WORLD]]
+    @observable public selector = 338  // 'Italy'
     @observable public smooth = true
 
     public constructor(piwikStore: PiwikStore) {
@@ -131,48 +133,35 @@ export class DomainStore {
     @action public async init() {
         if(this.domains !== undefined) return
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const domainsRaw = (await import(/* webpackChunkName: "data" */'../../static/domains.json')).default as any as IRaw[]
-        console.log(domainsRaw)
+        const response = (await fetch('https://coronadatascraper.com/timeseries-byLocation.json'))
+        const domainsRaw: IRaw[] = Object.values(await response.json())
 
         const domainNames = [...this.domainNames]
-        this.domainsRaw = domainsRaw
-        for(const domain of this.domainsRaw) {
-            domainNames.push([domain.country, domain.country])
-            if(domain.county) domainNames.push([domain.county, `${domain.country}: ${domain.county}`])
-            if(domain.subdivision) {
-                if(domain.county) {
-                    domainNames.push([domain.subdivision, `${domain.country}: ${domain.county}: ${domain.subdivision}`])
-                } else {
-                    domainNames.push([domain.subdivision, `${domain.country}: ${domain.subdivision}`])
-                }
+        for(const domain of domainsRaw) {
+            if(domain.city) {
+                domainNames.push([domain.featureId, `${domain.country}: ${domain.state}: ${domain.county}: ${domain.city}`])
+            } else if (domain.county) {
+                domainNames.push([domain.featureId, `${domain.country}: ${domain.state}: ${domain.county}`])
+            } else if (domain.state) {
+                domainNames.push([domain.featureId, `${domain.country}: ${domain.state}`])
+            } else {
+                domainNames.push([domain.featureId, `${domain.country}`])
             }
         }
-        console.log([...new Map(domainNames)])
+        const domainNamesSorted = [...new Map(domainNames)]
+            .sort((a, b) => a[1] < b[1] ? -1 : 1)
+        console.log(domainNamesSorted)
 
-        const max = this.domainsRaw.reduce((max2, domain) => {
-            return domain.cases.reduce((max3, datum) => max3 > datum[CASE_INDEX.DATE] ? max3 : datum[CASE_INDEX.DATE], '2020-01-01')
+        const max = domainsRaw.reduce((max2, domain) => {
+            return Object.keys(domain.dates).reduce((max3, date) => max3 > date ? max3 : date, '2020-01-01')
         }, '2020-01-01')
 
         const lastDateInData = moment(max)
 
-        const domains = this.domainsRaw.map((domainRaw) => {
-            const normalizedCasesMap = new Map<string, IRawCase>(domainRaw.cases.map((datum)=>[datum[CASE_INDEX.DATE], datum]))
-            const normalizedCases = new Array(lastDateInData.diff(DomainStore.START(), 'd') + 1).fill(null)
-                .map<IRawCase>((_, index) => {
-                    const date = DomainStore.START().add(index, 'd').format('YYYY-MM-DD')
-                    return normalizedCasesMap.get(date) || [date, 0, 0, 0]
-                })
-            return {
-                ...domainRaw,
-                cases: normalizedCases,
-            }
-        })
-
         runInAction(() => {
             this.lastDateInData = lastDateInData
-            this.domains = domains
-            this.domainNames = [...new Map(domainNames)]
+            this.domains = Object.values(domainsRaw)
+            this.domainNames = domainNamesSorted
         })
     }
 
@@ -185,51 +174,24 @@ export class DomainStore {
     @observable private domains: undefined | IRaw[]
 
     /**
-     * Select one or merge multiple domains into one
+     * Select one location.
      * based on `this.selector`.
      */
     @computed private get dataRaw(): undefined | IRaw {
         if(!this.domains) return undefined
-
-        const domains = this.domains
-            .filter((domain) => this.selector === WORLD
-                || this.selector === domain.country
-                || this.selector === domain.county
-                || this.selector === domain.subdivision
-            )
-        if(domains.length === 1) return domains[0]
-
-        const caseMap = new Map<string, IRawCase>()
-        for(const domain of domains) {
-            for(const acase of domain.cases) {
-                const date = acase[0]
-                if(!caseMap.has(date)) caseMap.set(date, [date, 0, 0, 0])
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                const mergedCase = caseMap.get(date)!
-                mergedCase[1] = mergedCase[1] + acase[1]
-                mergedCase[2] = mergedCase[2] + acase[2]
-                mergedCase[3] = mergedCase[3] + acase[3]
-            }
-        }
-
-        return {
-            country: this.selector,
-            county: this.selector,
-            subdivision: this.selector,
-            cases: [...caseMap.values()]
-        }
-
+        return this.domains.find((domain) => domain.featureId === this.selector)
     }
 
-    @computed public get data(): undefined | ICase[] {
+    @computed public get data(): undefined | ILocationDateExtended[] {
         if(!this.dataRaw) return undefined
 
-        return this.dataRaw.cases.map((datum, i, array): ICase => {
+        return Object.entries(this.dataRaw.dates).map(([date, datum], i, array): ILocationDateExtended => {
+            const deaths = datum.deaths ?? 0
+            const deathsPrev = i === 0 ? 0 : array[i-1][1].deaths ?? 0
             const deathsDelta = this.smooth
                 ? smoothDeaths(i, array)
-                : (datum[CASE_INDEX.DEATHS] - (i === 0 ? 0 : array[i-1][CASE_INDEX.DEATHS]))
+                : (deaths - deathsPrev)
 
-            const active = datum[CASE_INDEX.CONFIRMED] - datum[CASE_INDEX.DEATHS] - datum[CASE_INDEX.RECOVERED]
             const lower = modelByTomasPueyo(deathsDelta, {
                 daysToDeath: this.modelArgs.daysToDeath[0],
                 daysToDouble: this.modelArgs.daysToDouble[1],
@@ -241,16 +203,25 @@ export class DomainStore {
                 deathRate: this.modelArgs.deathRate[0],
             })
 
-            return [...datum, active, lower, upper] as ICase
+            return {
+                date: moment(date),
+                cases: datum.cases ?? 0,
+                deaths: datum.deaths ?? 0,
+                recovered: datum.recovered ?? 0,
+                active: datum.active ?? 0,
+                actualMin: lower,
+                actualMax: upper,
+                growthFactor: datum.growthFactor ?? null,
+            }
         })
     }
 
-    public setSelectedDomain = action((domainEntry: [string, string]) => {
+    public setSelectedDomain = action((domainEntry: [number, string]) => {
         this.piwikStore.push([
             'trackEvent',
             'model',
             'search',
-            domainEntry[0],
+            domainEntry[1],
         ])
         this.selector = domainEntry[0]
     })
