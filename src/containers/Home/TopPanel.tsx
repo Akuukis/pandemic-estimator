@@ -67,7 +67,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                     <TopPanelIcon
                         value={today === undefined ? '-' : formatDecimal(today.recovered)}
                         title='Recovered'
-                        tooltip='Official amount of people that have recovered after having a positive result of COVID-19'
+                        tooltip='Official amount of people that have recovered after having a positive result of COVID-19. Some countries are missing data after Mar 23.'
                         color='green'
                     />
                 </Grid>
@@ -75,7 +75,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                     <TopPanelIcon
                         value={today === undefined ? '-' : formatDecimal(today.active)}
                         title='Active'
-                        tooltip='Confirmed minus Recovered and Deaths.'
+                        tooltip='Confirmed minus Recovered and Deaths. Some countries are missing data after Mar 23.'
                         color='magenta'
                     />
                 </Grid>
