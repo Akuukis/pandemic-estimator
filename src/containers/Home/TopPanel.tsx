@@ -4,7 +4,6 @@ import { hot } from 'react-hot-loader/root'
 import { Grid, Paper, Switch, createStyles } from '@material-ui/core'
 import TopPanelIcon from './TopPanelIcon'
 import { formatDecimal, createSmartFC, formatFloat, IMyTheme } from '../../common'
-import { CASE_INDEX } from '../../stores/DomainStore'
 import { CONTEXT } from '../../stores'
 
 
@@ -41,8 +40,8 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
 
     const getActualEstimate = () => {
         if(today === undefined) return '-'
-        if(today[CASE_INDEX.DEATHS] === 0) return 'N/A'
-        return `${formatFloat(today[CASE_INDEX.ACTUAL_MIN])} - ${formatFloat(today[CASE_INDEX.ACTUAL_MAX])}`
+        if(today.deaths === 0) return 'N/A'
+        return `${formatFloat(today.actualMin)} - ${formatFloat(today.actualMax)}`
     }
 
     return (
@@ -50,7 +49,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
             <Grid container justify='center' alignItems='stretch'>
                 <Grid item xs={6} sm={4} lg={2}>
                     <TopPanelIcon
-                        value={today === undefined ? '-' : formatDecimal(today[CASE_INDEX.DEATHS])}
+                        value={today === undefined ? '-' : formatDecimal(today.deaths)}
                         title='Deaths'
                         tooltip='Ofiicial amount of deaths by COVID-19'
                         color='red'
@@ -58,7 +57,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                 </Grid>
                 <Grid item xs={6} sm={4} lg={2}>
                     <TopPanelIcon
-                        value={today === undefined ? '-' : formatDecimal(today[CASE_INDEX.CONFIRMED])}
+                        value={today === undefined ? '-' : formatDecimal(today.cases)}
                         title='Confirmed'
                         tooltip='Official amount of people that got a positive result of COVID-19'
                         color='yellow'
@@ -66,17 +65,17 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                 </Grid>
                 <Grid item xs={6} sm={4} lg={2}>
                     <TopPanelIcon
-                        value={today === undefined ? '-' : formatDecimal(today[CASE_INDEX.RECOVERED])}
+                        value={today === undefined ? '-' : formatDecimal(today.recovered)}
                         title='Recovered'
-                        tooltip='Official amount of people that have recovered after having a positive result of COVID-19'
+                        tooltip='Official amount of people that have recovered after having a positive result of COVID-19. Some countries are missing data after Mar 23.'
                         color='green'
                     />
                 </Grid>
                 <Grid item xs={6} sm={4} lg={2}>
                     <TopPanelIcon
-                        value={today === undefined ? '-' : formatDecimal(today[CASE_INDEX.ACTIVE])}
+                        value={today === undefined ? '-' : formatDecimal(today.active)}
                         title='Active'
-                        tooltip='Confirmed minus Recovered and Deaths.'
+                        tooltip='Confirmed minus Recovered and Deaths. Some countries are missing data after Mar 23.'
                         color='magenta'
                     />
                 </Grid>
