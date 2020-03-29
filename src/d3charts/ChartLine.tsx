@@ -41,7 +41,10 @@ const styles = (theme: IMyTheme) => createStyles({
         },
         '& .tick line': {
             opacity: 0.2,
-        }
+        },
+        '& path': {
+            opacity: 0,
+        },
     },
     gridLine: {
     },
@@ -191,30 +194,39 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
             .attr('height', chartHeight)
             .attr('transform', `translate(${D3ChartLine.MARGIN.left},${D3ChartLine.MARGIN.top})`)
 
-
+        const xTickFormatter = this.XTickFormatter(lockdownDate)
         const xAxis = d3.axisBottom<Date>(xScale)
-            .ticks(d3.timeMonday.every(1 + Math.floor(260 / chartWidth)))
-            .tickFormat((date) => moment(date).format('DD MMM'))
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            .ticks(d3.timeDay.every(1)!)
+            .tickSize(0)  // Will set to 3 or 6 later.
+            .tickPadding(6+3)
+            .tickFormat(xTickFormatter)
 
         this.xAxis
             .attr('transform', `translate(0, ${chartHeight})`)
             .call((svgXAxis) => {
                 svgXAxis.call(xAxis)
-                // svgXAxis.select('.domain').remove()
-                // svgXAxis.selectAll('.tick line').remove()
+                svgXAxis.selectAll('.tick line')
+                    .attr('y1', 0)
+                    .attr('y2', (d) => xTickFormatter(d as Date) === '' ? 3 : 6)
             })
 
         const yAxis = d3.axisRight<number>(yScale)
             // .tickSize(chartWidth)
             .tickArguments([6])
-            .tickFormat(this.yTickFormatter(maxValue))
+            .tickFormat(this.YTickFormatter(maxValue))
 
         this.yAxis
-            .attr('transform', `translate(${chartWidth}, 0)`)
+            .attr('transform', `translate(${chartWidth - 6}, 0)`)
             .transition().delay(TRANSITION_DURATION).duration(TRANSITION_DURATION)
                 .call((svgYAxis) => {
                     svgYAxis.call(yAxis)
-                    svgYAxis.selectAll('.tick line').duration(0).attr('x1', -chartWidth)
+                    svgYAxis.selectAll('.tick line').duration(0)
+                        .attr('x1', -chartWidth - D3ChartLine.MARGIN.left)
+                        .attr('x2', D3ChartLine.MARGIN.right)
+                    svgYAxis.selectAll('.tick text')
+                        .attr('dy', '-0.25em')
+
                     // svgYAxis.selectAll('.tick text')
                 })
 
@@ -340,7 +352,12 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
         this.yScaleOld = yScale
     }
 
-    private yTickFormatter = (maxValue: number) => (value: number) => {
+    private XTickFormatter = (lockdownDate: Date) => (date: Date) => {
+        const mom = moment(date)
+        return (mom.weekday() === 0 || mom.diff(moment(), 'd') === -1) ? mom.format('D MMM') : ''
+    }
+
+    private YTickFormatter = (maxValue: number) => (value: number) => {
         if (maxValue < 1e4) return `${d3.format(',.0f')(value)}`
         if (maxValue < 1e5) return `${d3.format(',.1f')(value / 1e3)}K`
         if (maxValue < 1e6) return `${d3.format(',.0f')(value / 1e3)}K`
