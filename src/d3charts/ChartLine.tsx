@@ -9,7 +9,7 @@ import { createStyles } from '@material-ui/styles'
 import { FunctionComponentProps, IMyTheme, createSmartFC } from '../common'
 import { AbstractD3Chart, IChartProps, useChart } from './AbstractChart'
 import RemountOnRetheme from './RemountOnRetheme'
-import { LocationStore, ILocationDateExtended } from '../stores/LocationStore'
+import { LocationStore, ILocationDateExtended, ILocation } from '../stores/LocationStore'
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-function-return-type
@@ -36,7 +36,7 @@ const styles = (theme: IMyTheme) => createStyles({
     },
     yAxis: {
         '& .tick text': {
-            fill: theme.palette.primary.light,
+            fill: theme.palette.primary.main,
             fontWeight: 500,
         },
         '& .tick line': {
@@ -80,6 +80,20 @@ const styles = (theme: IMyTheme) => createStyles({
     },
     path: {
     },
+    title: {
+        fontSize: '3rem',
+        fontWeight: 900,
+        fontFamily: theme.fontFamily.default,
+        fill: theme.palette.primary.dark,
+    },
+    location: {
+        fontSize: '1rem',
+        fontWeight: 700,
+        fontFamily: theme.fontFamily.default,
+        fill: theme.palette.primary.dark,
+    },
+    arguments: {
+    },
     credits: {
         fontSize: '0.625rem',
         fontFamily: theme.fontFamily.mono,
@@ -90,10 +104,8 @@ const styles = (theme: IMyTheme) => createStyles({
 const TRANSITION_DURATION = 750
 
 export interface IProps extends IChartProps {
-    data: IChartLineDatum[]
-    credits: string
     lockdownDate: Date
-    dividerOffset?: 'lastDayOfWeek' | 'firstMonthOfYear'
+    location: ILocation<ILocationDateExtended>
 }
 
 // Note: this doesn't friend with HOT nor MOBX.
@@ -108,12 +120,13 @@ const Chart = createSmartFC(styles)<IProps>(({children, classes, ...props}) => {
 }) /* !============================================================================================================= */
 
 
-export type IChartLineDatum = ILocationDateExtended
-
 type PropsFC = FunctionComponentProps<IProps, keyof ReturnType<typeof styles>>
 
 class D3ChartLine extends AbstractD3Chart<PropsFC> {
     public static MARGIN = {top: 20, right: 50, bottom: 50, left: 30}
+    protected title: d3.Selection<SVGTextElement, {}, null, undefined>
+    protected locations: d3.Selection<SVGGElement, {}, null, undefined>
+    protected arguments: d3.Selection<SVGGElement, {}, null, undefined>
     protected chart: d3.Selection<Element, {}, null, undefined>
     protected credits: d3.Selection<SVGTextElement, {}, null, undefined>
     protected divider: d3.Selection<SVGLineElement, {}, null, undefined>
@@ -137,6 +150,18 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
         this.yScaleOld = d3.scaleLinear()
             .domain([0, 0])
             .range([chartHeight, 0])
+
+        const header = this.svg.append<Element>('g')
+            .attr('transform', `translate(${D3ChartLine.MARGIN.left},${D3ChartLine.MARGIN.top})`)
+
+        this.title = header.append('text')
+            .classed(this.classes.title, true)
+
+        this.locations = header.append('g')
+            .classed(this.classes.location, true)
+
+        this.arguments = header.append('g')
+            .classed(this.classes.arguments, true)
 
         this.chart = this.svg.append<Element>('g')
             .classed(this.classes.svg, true)
@@ -170,7 +195,9 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
 
     public update(props: Omit<PropsFC, 'classes'>) {
         super.update(props)
-        const {credits, data, lockdownDate, dividerOffset} = props
+        const {location, lockdownDate} = props
+        const data = location.dates
+        const credits = location.url
 
         if(process.env.NODE_ENV === 'development') console.log('chart data', data)
 
@@ -188,6 +215,23 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
         const yScale = d3.scaleLinear()
             .domain([0, maxValue])
             .range([chartHeight, 0])
+
+        this.title
+            .text('Pandemic-estimator.net')
+            .attr('transform', `translate(0, ${3*16})`)
+
+        const locations = [
+                location.country ? `Country: ${location.country}` : undefined,
+                location.state ? `State: ${location.state}` : undefined,
+                location.county ? `County: ${location.county}` : undefined,
+                location.city ? `City: ${location.city}` : undefined,
+            ].filter((d): d is string => d !== undefined)
+
+        this.locations.selectAll('text')
+            .data(locations)
+            .join('text')
+                .text((d) => d)
+                .attr('transform', (d, i) => `translate(0, ${(4+i)*16})`)
 
         this.chart
             .attr('width', chartWidth)
@@ -230,24 +274,6 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
                     // svgYAxis.selectAll('.tick text')
                 })
 
-        const dividerPosition = () => {
-            switch(dividerOffset) {
-                case('lastDayOfWeek'):    return (chartWidth - chartWidth / 12)
-                case('firstMonthOfYear'): return (chartWidth / 12)
-                default:                  return 0
-            }
-        }
-
-        if(dividerOffset) {
-            this.divider
-                .attr('x1', dividerPosition)
-                .attr('x2', dividerPosition)
-                .attr('y1', -40)
-                .attr('y2', chartHeight + 40)
-                .attr('stroke', '#000000')
-                .attr('stroke-dasharray', 4)
-        }
-
         interface IData {
             date: Date,
             value: number,
@@ -259,7 +285,7 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
                 'active',
                 'actualMin',
                 'actualMax',
-            ] as (keyof IChartLineDatum)[]).map((prop) => data.map<IData>((d) => ({
+            ] as (keyof ILocationDateExtended)[]).map((prop) => data.map<IData>((d) => ({
                 date: d.date.toDate(),
                 value: d[prop] as number,
             })))
@@ -272,12 +298,12 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
             .x((d) => xScale(d.date))
             .y((d) => yScale(d.value))
 
-        const areaOld = d3.area<IChartLineDatum>()
+        const areaOld = d3.area<ILocationDateExtended>()
             .curve(d3.curveBasis)
             .x(d => this.xScaleOld(d.date.toDate()))
             .y0(d => this.yScaleOld(d.actualMin))
             .y1(d => this.yScaleOld(d.actualMax))
-        const area = d3.area<IChartLineDatum>()
+        const area = d3.area<ILocationDateExtended>()
             .curve(d3.curveBasis)
             .x(d => xScale(d.date.toDate()))
             .y0(d => yScale(d.actualMin))

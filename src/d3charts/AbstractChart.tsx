@@ -6,7 +6,7 @@ import { FunctionComponentProps } from '../common'
 
 
 export interface IChartProps {
-    data: unknown[]
+    // data: unknown[]
 }
 
 // tslint:disable-next-line: min-class-cohesion
