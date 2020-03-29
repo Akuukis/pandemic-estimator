@@ -159,9 +159,12 @@ export class LocationStore {
             return Object.keys(location.dates).reduce((max3, date) => max3 > date ? max3 : date, '2020-01-01')
         }, '2020-01-01')
 
+        const selector = domainNamesSorted.find(([id, name]) => name === 'Italy')
+
         const lastDateInData = moment(max)
 
         runInAction(() => {
+            this.selector = selector ? selector[0] : this.selector
             this.lastDateInData = lastDateInData
             this.locations = Object.values(locationsRaw)
             this.titles = domainNamesSorted
