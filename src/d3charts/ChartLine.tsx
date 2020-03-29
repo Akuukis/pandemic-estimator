@@ -23,6 +23,7 @@ const styles = (theme: IMyTheme) => createStyles({
     },
 
     svg: {
+        backgroundColor: theme.palette.background.paper,
         position: 'absolute',
         top: 0,
         left: 0,
@@ -80,11 +81,16 @@ const styles = (theme: IMyTheme) => createStyles({
     },
     path: {
     },
+    legend: {
+        backgroundColor: theme.palette.background.paper,
+    },
     title: {
-        fontSize: '3rem',
-        fontWeight: 900,
+        fontSize: '1.5rem',
+        fontWeight: 'bold',
         fontFamily: theme.fontFamily.default,
         fill: theme.palette.primary.dark,
+        textAnchor: 'middle',
+        textDecoration: 'underline',
     },
     location: {
         fontSize: '1rem',
@@ -152,6 +158,7 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
             .range([chartHeight, 0])
 
         const header = this.svg.append<Element>('g')
+            .classed(this.classes.legend, true)
             .attr('transform', `translate(${D3ChartLine.MARGIN.left},${D3ChartLine.MARGIN.top})`)
 
         this.title = header.append('text')
@@ -218,7 +225,7 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
 
         this.title
             .text('Pandemic-estimator.net')
-            .attr('transform', `translate(0, ${3*16})`)
+            .attr('transform', `translate(${chartWidth/2}, ${1.5*16})`)
 
         const locations = [
                 location.country ? `Country: ${countryTitle(location.country)}` : undefined,
@@ -231,7 +238,7 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
             .data(locations)
             .join('text')
                 .text((d) => d)
-                .attr('transform', (d, i) => `translate(0, ${(5+i)*16})`)
+                .attr('transform', (d, i) => `translate(0, ${(4+i*1.2)*16})`)
 
         this.chart
             .attr('width', chartWidth)
