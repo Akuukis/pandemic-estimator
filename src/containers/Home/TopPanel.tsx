@@ -24,7 +24,7 @@ const styles = (theme: IMyTheme) => createStyles({
         marginBottom: -theme.spacing(0.5),
     },
     icon: {
-        verticalAlign: 'bottom',
+        verticalAlign: 'sub',
     }
 })
 
@@ -45,61 +45,59 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
     }
 
     return (
-        <Paper square className={classes.root}>
-            <Grid container justify='center' alignItems='stretch'>
-                <Grid item xs={6} sm={4} lg={2}>
-                    <TopPanelIcon
-                        value={today === undefined ? '-' : formatDecimal(today.deaths)}
-                        title='Deaths'
-                        tooltip='Ofiicial amount of deaths by COVID-19'
-                        color='red'
-                    />
-                </Grid>
-                <Grid item xs={6} sm={4} lg={2}>
-                    <TopPanelIcon
-                        value={today === undefined ? '-' : formatDecimal(today.confirmed)}
-                        title='Confirmed'
-                        tooltip='Official amount of people that got a positive result of COVID-19'
-                        color='yellow'
-                    />
-                </Grid>
-                <Grid item xs={6} sm={4} lg={2}>
-                    <TopPanelIcon
-                        value={today === undefined ? '-' : formatDecimal(today.recovered)}
-                        title='Recovered'
-                        tooltip='Official amount of people that have recovered after having a positive result of COVID-19. Some countries are missing data after Mar 23.'
-                        color='green'
-                    />
-                </Grid>
-                <Grid item xs={6} sm={4} lg={2}>
-                    <TopPanelIcon
-                        value={today === undefined ? '-' : formatDecimal(today.active)}
-                        title='Active'
-                        tooltip='Confirmed minus Recovered and Deaths. Some countries are missing data after Mar 23.'
-                        color='magenta'
-                    />
-                </Grid>
-                <Grid item xs={6} sm={4} lg={2}>
-                    <TopPanelIcon
-                        value={getActualEstimate()}
-                        title='Est. Actual'
-                        tooltip='Estimated Actual cases are Confirmed cases plus all other sick people that haven’t taken the test yet.'
-                        color='#479cff'
-                    />
-                </Grid>
-                <Grid item xs={6} sm={4} lg={2}>
-                    <TopPanelIcon
-                        value={<Switch
-                            classes={{root: classes.fixSwitch}}
-                            checked={locationStore.smooth}
-                            onChange={locationStore.setSmooth}
-                        />}
-                        title='Smooth'
-                        tooltip='Smooth Estimated Actual cases across 7 days.'
-                        color='#00000000'
-                    />
-                </Grid>
+        <Grid container justify='center' alignItems='stretch' className={classes.root}>
+            <Grid item xs={6} sm={4} lg={2}>
+                <TopPanelIcon
+                    value={today === undefined ? '-' : formatDecimal(today.deaths)}
+                    title='Deaths'
+                    tooltip='Ofiicial amount of deaths by COVID-19'
+                    color='red'
+                />
             </Grid>
-        </Paper>
+            <Grid item xs={6} sm={4} lg={2}>
+                <TopPanelIcon
+                    value={today === undefined ? '-' : formatDecimal(today.confirmed)}
+                    title='Confirmed'
+                    tooltip='Official amount of people that got a positive result of COVID-19'
+                    color='yellow'
+                />
+            </Grid>
+            <Grid item xs={6} sm={4} lg={2}>
+                <TopPanelIcon
+                    value={today === undefined ? '-' : formatDecimal(today.recovered)}
+                    title='Recovered'
+                    tooltip='Official amount of people that have recovered after having a positive result of COVID-19. Some countries are missing data after Mar 23.'
+                    color='green'
+                />
+            </Grid>
+            <Grid item xs={6} sm={4} lg={2}>
+                <TopPanelIcon
+                    value={today === undefined ? '-' : formatDecimal(today.active)}
+                    title='Active'
+                    tooltip='Confirmed minus Recovered and Deaths. Some countries are missing data after Mar 23.'
+                    color='magenta'
+                />
+            </Grid>
+            <Grid item xs={6} sm={4} lg={2}>
+                <TopPanelIcon
+                    value={getActualEstimate()}
+                    title='Est. Actual'
+                    tooltip='Estimated Actual cases are Confirmed cases plus all other sick people that haven’t taken the test yet.'
+                    color='#479cff'
+                />
+            </Grid>
+            <Grid item xs={6} sm={4} lg={2}>
+                <TopPanelIcon
+                    value={<Switch
+                        classes={{root: classes.fixSwitch}}
+                        checked={locationStore.smooth}
+                        onChange={locationStore.setSmooth}
+                    />}
+                    title='Smooth'
+                    tooltip='Smooth Estimated Actual cases across 7 days.'
+                    color='#00000000'
+                />
+            </Grid>
+        </Grid>
     )
 })) /* ============================================================================================================= */

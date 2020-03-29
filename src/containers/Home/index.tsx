@@ -45,7 +45,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
                     <LeftPanel />
                 </Grid>
                 <Grid item xs={12} sm className={classes.main}>
-                    <Grid container justify='center' alignItems='stretch' direction='column' style={{height: '100%'}}>
+                    <Grid container justify='center' alignItems='stretch' direction='column' style={{height: '100%', flexWrap: 'nowrap'}}>
                         <Grid item>
                             <TopPanel />
                         </Grid>

@@ -23,7 +23,7 @@ const styles = (theme: IMyTheme) => createStyles({
     title: {
     },
     icon: {
-        verticalAlign: 'bottom',
+        verticalAlign: 'sub',
     }
 })
 
