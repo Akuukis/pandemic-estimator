@@ -5,7 +5,7 @@ import { PiwikStore } from './PiwikStore'
 import * as moment from 'moment'
 
 
-const getName = (cca3: string): string => {
+export const countryTitle = (cca3: string): string => {
     const title = worldCountries.find((country) => country.cca3 === cca3)?.name?.common ?? cca3
     return title
 }
@@ -143,13 +143,13 @@ export class LocationStore {
         const domainNames = [...this.titles]
         for(const location of locationsRaw) {
             if(location.city) {
-                domainNames.push([location.featureId, `${getName(location.country)}: ${location.state}: ${location.county}: ${location.city}`])
+                domainNames.push([location.featureId, `${countryTitle(location.country)}: ${location.state}: ${location.county}: ${location.city}`])
             } else if (location.county) {
-                domainNames.push([location.featureId, `${getName(location.country)}: ${location.state}: ${location.county}`])
+                domainNames.push([location.featureId, `${countryTitle(location.country)}: ${location.state}: ${location.county}`])
             } else if (location.state) {
-                domainNames.push([location.featureId, `${getName(location.country)}: ${location.state}`])
+                domainNames.push([location.featureId, `${countryTitle(location.country)}: ${location.state}`])
             } else {
-                domainNames.push([location.featureId, `${getName(location.country)}`])
+                domainNames.push([location.featureId, `${countryTitle(location.country)}`])
             }
         }
         const domainNamesSorted = [...new Map(domainNames)]

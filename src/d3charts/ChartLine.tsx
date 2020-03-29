@@ -9,7 +9,7 @@ import { createStyles } from '@material-ui/styles'
 import { FunctionComponentProps, IMyTheme, createSmartFC } from '../common'
 import { AbstractD3Chart, IChartProps, useChart } from './AbstractChart'
 import RemountOnRetheme from './RemountOnRetheme'
-import { LocationStore, ILocationDateExtended, ILocation } from '../stores/LocationStore'
+import { countryTitle, LocationStore, ILocationDateExtended, ILocation } from '../stores/LocationStore'
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-function-return-type
@@ -221,7 +221,7 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
             .attr('transform', `translate(0, ${3*16})`)
 
         const locations = [
-                location.country ? `Country: ${location.country}` : undefined,
+                location.country ? `Country: ${countryTitle(location.country)}` : undefined,
                 location.state ? `State: ${location.state}` : undefined,
                 location.county ? `County: ${location.county}` : undefined,
                 location.city ? `City: ${location.city}` : undefined,
@@ -231,7 +231,7 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
             .data(locations)
             .join('text')
                 .text((d) => d)
-                .attr('transform', (d, i) => `translate(0, ${(4+i)*16})`)
+                .attr('transform', (d, i) => `translate(0, ${(5+i)*16})`)
 
         this.chart
             .attr('width', chartWidth)
@@ -279,7 +279,7 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
             value: number,
         }
         const linedata = ([
-                'cases',
+                'confirmed',
                 'deaths',
                 'recovered',
                 'active',
