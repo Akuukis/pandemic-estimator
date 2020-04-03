@@ -7,7 +7,7 @@ import { PiwikStore } from './PiwikStore'
 
 // tslint:disable: no-any
 export const CONTEXT = {
-    LOCATION: createContext<null|LocationStore>(null as any),
+    LOCATION: createContext<LocationStore>(null as any),
     PIWIK: createContext<PiwikStore>(null as any),
 }
 

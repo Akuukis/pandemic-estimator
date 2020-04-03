@@ -33,7 +33,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
     })
 
     return (
-        <CONTEXT.LOCATION.Provider value={locationStore}>
+        <CONTEXT.LOCATION.Provider value={locationStore as LocationStore}>
             <Prologue />
             <Grid container justify='center' alignItems='stretch' className={classes.chart}>
                 <Chart />

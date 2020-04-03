@@ -46,6 +46,7 @@ interface IProps {
 export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...props}) => {
     const locationStore = React.useContext(CONTEXT.LOCATION)
 
+    // This is only place where locationStore could be null. So type is as always present.
     if(!locationStore) return (<ChartLoading />)
 
     return (
