@@ -1,15 +1,15 @@
 import * as d3 from 'd3'
-import * as React from 'react'
-import { Omit } from 'utility-types'
 import * as moment from 'moment'
+import * as React from 'react'
 import { cold } from 'react-hot-loader'
+import { Omit } from 'utility-types'
 
 import { createStyles } from '@material-ui/styles'
 
-import { FunctionComponentProps, IMyTheme, createSmartFC } from '../common'
+import { createSmartFC, FunctionComponentProps, IMyTheme } from '../common'
+import { countryTitle, ILocation, ILocationDateExtended, LocationStore } from '../stores/LocationStore'
 import { AbstractD3Chart, IChartProps, useChart } from './AbstractChart'
 import RemountOnRetheme from './RemountOnRetheme'
-import { countryTitle, LocationStore, ILocationDateExtended, ILocation } from '../stores/LocationStore'
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-function-return-type
@@ -286,12 +286,12 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
             value: number,
         }
         const linedata = ([
-                'confirmed',
-                'deaths',
-                'recovered',
-                'active',
                 'actualMin',
                 'actualMax',
+                'active',
+                'recovered',
+                'confirmed',
+                'deaths',
             ] as (keyof ILocationDateExtended)[]).map((prop) => data.map<IData>((d) => ({
                 date: d.date.toDate(),
                 value: d[prop] as number,
@@ -329,12 +329,12 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
 
         const classes = this.classes
         const lineStyles: (keyof typeof classes)[] = [
+            'lineActual',
+            'lineActual',
+            'lineActive',
+            'lineRecovered',
             'lineConfirmed',
             'lineDeath',
-            'lineRecovered',
-            'lineActive',
-            'lineActual',
-            'lineActual',
         ]
 
         this.area.selectAll("path")
