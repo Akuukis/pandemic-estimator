@@ -6,6 +6,7 @@ import { Grid, Paper } from '@material-ui/core'
 import { createSmartFC, createStyles, IMyTheme } from '../../common/'
 import ChartLine from '../../d3charts/ChartLine'
 import { CONTEXT } from '../../stores'
+import ChartLoading from './ChartLoading'
 import LeftPanel from './LeftPanel'
 import TopPanel from './TopPanel'
 
@@ -45,7 +46,7 @@ interface IProps {
 export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...props}) => {
     const locationStore = React.useContext(CONTEXT.LOCATION)
 
-    if(!locationStore) return null
+    if(!locationStore) return (<ChartLoading />)
 
     return (
         <>
