@@ -139,6 +139,7 @@ export class LocationStore {
 
     public constructor(piwikStore: PiwikStore, locations: ILocation[]) {
         this.piwikStore = piwikStore
+        this.locations = Object.values(locations)
 
         const domainNames: [number, string][] = []
         for(const location of locations) {
@@ -154,18 +155,28 @@ export class LocationStore {
         }
         const domainNamesSorted = domainNames
             .sort((a, b) => a[1] < b[1] ? -1 : 1)
+        this.titles = domainNamesSorted
 
         const max = locations.reduce((max2, location) => {
             return Object.keys(location.dates).reduce((max3, date) => max3 > date ? max3 : date, '2020-01-01')
         }, '2020-01-01')
-
-        const selector = domainNamesSorted.find(([id, name]) => name === 'Italy')
-
         this.lastDateInData = moment(max)
-        this.titles = domainNamesSorted
-        this.locations = Object.values(locations)
+
+        window.onpopstate = action((event: PopStateEvent) => {
+            const domainEntry = this.getQueryLocation()
+            this.piwikStore.push([
+                'trackEvent',
+                'model',
+                'history',
+                domainEntry[1],
+            ])
+            this.selector = domainEntry[0]
+        })
+        const domainEntry = this.getQueryLocation()
+        console.log(domainEntry)
+        document.title = `Pandemic Estimator / ${domainEntry[1]}`
         runInAction('init', () => {
-            this.selector = selector ? selector[0] : this.locations[0].featureId
+            this.selector = domainEntry[0]
         })
     }
 
@@ -235,6 +246,12 @@ export class LocationStore {
             domainEntry[1],
         ])
         this.selector = domainEntry[0]
+        window.history.pushState(
+            undefined,
+            `Pandemic Estimator / ${domainEntry[1]}`,
+            `?location=${encodeURIComponent(domainEntry[1])}`
+        )
+        document.title = `Pandemic Estimator / ${domainEntry[1]}`
     })
     public setSmooth = action((valueOrEvent: boolean | React.ChangeEvent<HTMLInputElement>) => {
         const bool = typeof valueOrEvent === 'boolean' ? valueOrEvent : valueOrEvent.target.checked
@@ -246,6 +263,22 @@ export class LocationStore {
         ])
         this.smooth = bool
     })
+
+    private getQueryLocation = () => {
+        let query = new RegExp('NA')
+        if(window.location.search.length > 0) {
+            const pairs = window.location.search.slice(1).split('&').map((pair) => pair.split('='))
+            const locationStringPair = pairs.find((pair) => pair[0] === 'location')
+            if(locationStringPair) {
+                query = new RegExp(`^${decodeURIComponent(locationStringPair[1])}$`, 'i')
+            }
+        }
+        const domainEntry = this.titles.find(([id, name]) => name.search(query) === 0)
+            ?? this.titles.find(([id, name]) => name === 'Italy')  // Default, because most searched for lately.
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            ?? this.titles.find(([id, name]) => id === this.locations[0].featureId)!  // If something very bad happens, show at least something.
+        return domainEntry
+    }
 }
 
 
