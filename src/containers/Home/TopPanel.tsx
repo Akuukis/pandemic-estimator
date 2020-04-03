@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
 
-import { Grid, Paper, Switch, createStyles } from '@material-ui/core'
-import TopPanelIcon from './TopPanelIcon'
-import { formatDecimal, createSmartFC, formatFloat, IMyTheme } from '../../common'
+import { createStyles, Grid, Switch } from '@material-ui/core'
+
+import { createSmartFC, formatDecimal, formatFloat, IMyTheme } from '../../common'
 import { CONTEXT } from '../../stores'
+import TopPanelIcon from './TopPanelIcon'
 
 
 const styles = (theme: IMyTheme) => createStyles({
@@ -64,7 +65,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
             </Grid>
             <Grid item xs={6} sm={4} lg={2}>
                 <TopPanelIcon
-                    value={today === undefined ? '-' : formatDecimal(today.recovered)}
+                    value={today === undefined ? '-' : (today.recovered === 0 ? 'N/A' : formatDecimal(today.recovered))}
                     title='Recovered'
                     tooltip='Official amount of people that have recovered after having a positive result of COVID-19. Some countries are missing data after Mar 23.'
                     color='green'
@@ -72,7 +73,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
             </Grid>
             <Grid item xs={6} sm={4} lg={2}>
                 <TopPanelIcon
-                    value={today === undefined ? '-' : formatDecimal(today.active)}
+                    value={today === undefined ? '-' : (today.active === 0 ? 'N/A' : formatDecimal(today.active))}
                     title='Active'
                     tooltip='Confirmed minus Recovered and Deaths. Some countries are missing data after Mar 23.'
                     color='magenta'

@@ -59,6 +59,9 @@ const styles = (theme: IMyTheme) => createStyles({
         strokeLinejoin: "round",
         strokeLinecap: "round",
     },
+    lineHidden: {
+        strokeWidth: 0,
+    },
     lineDeath: {
         stroke: "red",
     },
@@ -331,8 +334,8 @@ class D3ChartLine extends AbstractD3Chart<PropsFC> {
         const lineStyles: (keyof typeof classes)[] = [
             'lineActual',
             'lineActual',
-            'lineActive',
-            'lineRecovered',
+            linedata[2][linedata[2].length-1].value > 0 ? 'lineActive' : 'lineHidden',
+            linedata[3][linedata[3].length-1].value > 0 ? 'lineRecovered' : 'lineHidden',
             'lineConfirmed',
             'lineDeath',
         ]
