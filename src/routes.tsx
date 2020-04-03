@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 
 import { ROUTES } from './constants/routes'
 import App from './containers/App'
-import Home from './containers/Home'
 import Contact from './containers/Contact'
+import Home from './containers/Home'
 import Methodology from './containers/Methodology'
 
 
@@ -17,6 +17,9 @@ export default (
                 </Route>
                 <Route path={ROUTES.CONTACT}>
                     <Contact />
+                </Route>
+                <Route path={ROUTES.FULLSCREEN}>
+                    <Home />
                 </Route>
                 <Route path={ROUTES.HOME}>
                     <Home />

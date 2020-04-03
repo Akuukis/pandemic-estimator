@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
+import { useLocation } from 'react-router-dom'
 
 import { Grid, Paper } from '@material-ui/core'
 
 import { createSmartFC, createStyles, IMyTheme } from '../../common/'
+import { ROUTES } from '../../constants/routes'
 import ChartLine from '../../d3charts/ChartLine'
 import { CONTEXT } from '../../stores'
 import ChartLoading from './ChartLoading'
@@ -44,6 +46,7 @@ interface IProps {
 
 
 export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...props}) => {
+    const location = useLocation()
     const locationStore = React.useContext(CONTEXT.LOCATION)
 
     // This is only place where locationStore could be null. So type is as always present.
@@ -51,9 +54,15 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
 
     return (
         <>
-            <Grid item xs={12} sm={1} className={classes.sidePanel}>
-                <LeftPanel />
-            </Grid>
+            {location.pathname === ROUTES.FULLSCREEN ?
+                null
+            : (
+                <Grid item xs={12} sm={1} className={classes.sidePanel}>
+                    <LeftPanel />
+                </Grid>
+            )
+            }
+
             <Grid item xs={12} sm className={classes.main}>
                 <Grid container justify='center' alignItems='stretch' direction='column' style={{height: '100%', flexWrap: 'nowrap'}}>
                     <Grid item>

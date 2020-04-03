@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
+import { useLocation } from 'react-router-dom'
 
 import { Paper } from '@material-ui/core'
 
 import { createSmartFC, createStyles, IMyTheme } from '../../common/'
+import { ROUTES } from '../../constants/routes'
 import Topbar from './Topbar'
 
 
@@ -46,11 +48,12 @@ interface IProps {
 
 
 export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...props}) => {
+    const location = useLocation()
 
     return (
         <Paper square className={classes.app}>
             <Paper square className={classes.content}>
-                <Topbar />
+                {location.pathname === ROUTES.FULLSCREEN ? null : (<Topbar />)}
                 {children}
             </Paper>
         </Paper>

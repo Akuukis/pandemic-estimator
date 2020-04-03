@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
+import { useLocation } from 'react-router-dom'
 
 import { Grid } from '@material-ui/core'
 
 import { createSmartFC, createStyles, IMyTheme, useAsyncEffectOnce } from '../../common/'
+import { ROUTES } from '../../constants/routes'
 import { CONTEXT } from '../../stores'
 import { LocationStore } from '../../stores/LocationStore'
 import Chart from './Chart'
@@ -25,6 +27,7 @@ interface IProps {
 
 
 export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...props}) => {
+    const location = useLocation()
     const piwikStore = React.useContext(CONTEXT.PIWIK)
     const [locationStore, setLocationStore] = React.useState<null|LocationStore>(null)
 
@@ -34,7 +37,7 @@ export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...
 
     return (
         <CONTEXT.LOCATION.Provider value={locationStore as LocationStore}>
-            <Prologue />
+            {location.pathname === ROUTES.FULLSCREEN ? null : (<Prologue />)}
             <Grid container justify='center' alignItems='stretch' className={classes.chart}>
                 <Chart />
             </Grid>
