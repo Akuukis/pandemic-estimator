@@ -1,10 +1,10 @@
+import matchSorter from 'match-sorter'
 import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
-import matchSorter from 'match-sorter';
 
 import { Grid, InputAdornment, TextField } from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
 import IconSearchOutlined from '@material-ui/icons/SearchOutlined'
+import { Autocomplete } from '@material-ui/lab'
 
 import { createSmartFC, createStyles, IMyTheme } from '../../common/'
 import { CONTEXT } from '../../stores'
@@ -32,7 +32,7 @@ interface IProps {
 
 
 export default hot(createSmartFC(styles)<IProps>(({children, classes, theme, ...props}) => {
-    const locationStore = React.useContext(CONTEXT.LOCATION)
+    const locationStore = React.useContext(CONTEXT.LOCATION)!
 
     const filterOptions = (options, { inputValue }) => {
         return matchSorter(options, inputValue);

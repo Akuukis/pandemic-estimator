@@ -1,8 +1,8 @@
 import { action, computed, observable, runInAction } from 'mobx'
+import * as moment from 'moment'
 import worldCountries from 'world-countries'
 
 import { PiwikStore } from './PiwikStore'
-import * as moment from 'moment'
 
 
 export const countryTitle = (cca3: string): string => {
@@ -122,26 +122,26 @@ export class LocationStore {
         daysToDouble: [6, 7],
         daysToDoubleAfter: [12, 14],
     }
+    public static async new(piwikStore: PiwikStore) {
+        const response = (await fetch('https://coronadatascraper.com/timeseries-byLocation.json'))
+        const json = await response.json()
+        const locations: ILocation[] = Object.values(json)
+
+        return new LocationStore(piwikStore, locations)
+    }
 
     @observable.deep public modelArgs: IModelArgsExpanded = LocationStore.DEFAULT_ARGS
 
     private piwikStore: PiwikStore
-    @observable public titles: [number, string][] = []  // [[WORLD, WORLD]]
-    @observable public selector = 338  // 'Italy'
+    public titles: [number, string][] = []  // [[WORLD, WORLD]]
+    @observable public selector = 1
     @observable public smooth = true
 
-    public constructor(piwikStore: PiwikStore) {
+    public constructor(piwikStore: PiwikStore, locations: ILocation[]) {
         this.piwikStore = piwikStore
-    }
 
-    @action public async init() {
-        if(this.locations !== undefined) return
-
-        const response = (await fetch('https://coronadatascraper.com/timeseries-byLocation.json'))
-        const locationsRaw: ILocation[] = Object.values(await response.json())
-
-        const domainNames = [...this.titles]
-        for(const location of locationsRaw) {
+        const domainNames: [number, string][] = []
+        for(const location of locations) {
             if(location.city) {
                 domainNames.push([location.featureId, `${countryTitle(location.country)}: ${location.state}: ${location.county}: ${location.city}`])
             } else if (location.county) {
@@ -152,32 +152,30 @@ export class LocationStore {
                 domainNames.push([location.featureId, `${countryTitle(location.country)}`])
             }
         }
-        const domainNamesSorted = [...new Map(domainNames)]
+        const domainNamesSorted = domainNames
             .sort((a, b) => a[1] < b[1] ? -1 : 1)
 
-        const max = locationsRaw.reduce((max2, location) => {
+        const max = locations.reduce((max2, location) => {
             return Object.keys(location.dates).reduce((max3, date) => max3 > date ? max3 : date, '2020-01-01')
         }, '2020-01-01')
 
         const selector = domainNamesSorted.find(([id, name]) => name === 'Italy')
 
-        const lastDateInData = moment(max)
-
-        runInAction(() => {
-            this.selector = selector ? selector[0] : this.selector
-            this.lastDateInData = lastDateInData
-            this.locations = Object.values(locationsRaw)
-            this.titles = domainNamesSorted
+        this.lastDateInData = moment(max)
+        this.titles = domainNamesSorted
+        this.locations = Object.values(locations)
+        runInAction('init', () => {
+            this.selector = selector ? selector[0] : this.locations[0].featureId
         })
     }
 
-    @observable public lastDateInData: undefined | moment.Moment
+    public lastDateInData: moment.Moment
 
     /**
      * Normalized input data, where length of cases are truncated or padded
      * to have equal length from 1 Feb to latest date found in data.
      */
-    @observable private locations: undefined | ILocation[]
+    private locations: ILocation[]
 
     @computed public get data(): undefined | ILocationDateExtended[] {
         if(!this.locations) return undefined
